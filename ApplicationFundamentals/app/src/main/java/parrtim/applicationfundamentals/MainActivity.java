@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -16,6 +17,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
         Log.d("Message", intent.getStringExtra("message"));
+        TextView textView = (TextView) findViewById(R.id.message);
+        textView.setText(intent.getStringExtra("message"));
         super.onNewIntent(intent);
     }
 }
