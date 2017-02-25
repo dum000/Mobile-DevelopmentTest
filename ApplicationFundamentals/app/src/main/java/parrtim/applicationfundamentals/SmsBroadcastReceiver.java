@@ -10,7 +10,7 @@ import android.util.Log;
 /**
  * Created by tparr on 2/23/2017.
  */
-public class SmsReceiver extends BroadcastReceiver {
+public class SmsBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
