@@ -1,17 +1,10 @@
 package parrtim.applicationfundamentals;
 
 import android.app.Activity;
-import android.content.ContentProvider;
-import android.content.ContentProviderClient;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Telephony;
-import android.telephony.SmsMessage;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,17 +14,17 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.System.out;
-
 public class MainActivity extends Activity {
 
     ArrayAdapter<String> adapter;
     ListView listView;
     ArrayList<String> messages;
+    String msg = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Message", "The Main OnCreate event");
+        Log.d("Message", "OnCreate event");
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
@@ -63,6 +56,12 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(msg, "onStart() event");
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putStringArrayList("messages", messages);
         Log.d("Message", "Saving Messages");
@@ -71,7 +70,8 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(Intent intent)
+    {
         String message = intent.getStringExtra("message");
         Log.d("Message", message);
         adapter.add(message);
@@ -83,13 +83,46 @@ public class MainActivity extends Activity {
         List<String> sms = new ArrayList<>();
         Cursor cur = getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null);
 
-        while (cur.moveToNext()) {
+        while (cur.moveToNext())
+        {
             String address = cur.getString(cur.getColumnIndex("address"));
             String body = cur.getString(cur.getColumnIndexOrThrow("body"));
             sms.add("Number: " + address + " .Message: " + body);
-
         }
         return sms;
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(msg, "onRestart Event");
+    }
+
+    /** Called when the activity has become visible. */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(msg, "onResume() event");
+    }
+
+    /** Called when another activity is taking focus. */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(msg, "onPause() event");
+    }
+
+    /** Called when the activity is no longer visible. */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(msg, "onStop() event");
+    }
+
+    /** Called just before the activity is destroyed. */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(msg, "onDestroy() event");
     }
 }

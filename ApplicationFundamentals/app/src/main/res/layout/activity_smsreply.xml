@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/editText3" />
+        android:id="@+id/replyMessage" />
 
     <Button
         android:text="@string/reply"
