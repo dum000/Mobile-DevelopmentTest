@@ -11,61 +11,60 @@ import android.widget.TextView;
 public class SMSReply extends Activity {
 
     String receivedMessage;
-    String replyMessage;
+    String receivedNumber;
     String msg = "ReplyActivity";
+    DictionaryOpenHelper database;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smsreply);
-        Log.d(msg, "The Reply onCreate() event");
 
         Intent intent = getIntent();
         receivedMessage = intent.getStringExtra("message");
-        TextView viewById = (TextView) findViewById(R.id.inboxMessage);
-        viewById.setText(receivedMessage);
+        receivedNumber = intent.getStringExtra("number");
 
-        DictionaryOpenHelper database = new DictionaryOpenHelper(getApplicationContext());
+        TextView messageViewById = (TextView) findViewById(R.id.inboxMessage);
+        messageViewById.setText(receivedMessage);
+        TextView numberViewById = (TextView) findViewById(R.id.inboxNumber);
+        numberViewById.setText(receivedNumber);
 
-        SQLiteDatabase writeableDatabase = database.getWritableDatabase();
-        writeableDatabase.
-
+        database = new DictionaryOpenHelper(getApplicationContext());
 
         SQLiteDatabase readableDatabase = database.getReadableDatabase();
-        Cursor results = readableDatabase.query("Draft", new String[]{ "message" }, "ID = " + receivedMessage, null, null, null, null);
-        Log.d("","");
-    }
 
-    /** Called when the activity is about to become visible. */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(msg, "The Reply onStart() event");
-    }
+        Cursor results = readableDatabase.query("Draft", new String[]{ "Number", "ReceivedMessage", "DraftMessage" }, "Number = " + receivedNumber + " AND " + "ReceivedMessage = \"" + receivedMessage + "\"", null, null, null, null);
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
+        if (results.moveToNext()) {
+            TextView draftMessage = (TextView) findViewById(R.id.replyMessage);
+            String replyMessage = results.getString(2);
+            draftMessage.setText(replyMessage);
+        }
 
-    /** Called when the activity has become visible. */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(msg, "The Reply onResume() event");
-    }
+        results.close();
 
-    /** Called when another activity is taking focus. */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(msg, "The Reply onPause() event");
+        Log.d(msg, "The Reply onCreate() event");
     }
 
     /** Called when the activity is no longer visible. */
     @Override
     protected void onStop() {
         super.onStop();
+
+        TextView draftMessage = (TextView) findViewById(R.id.replyMessage);
+
+        SQLiteDatabase writeableDatabase = database.getWritableDatabase();
+        writeableDatabase.execSQL(
+                "UPDATE Draft\n" +
+                "SET DraftMessage='" + draftMessage.getText().toString() + "'\n" +
+                "WHERE Number=\"" + receivedNumber + "\" AND ReceivedMessage=\"" + receivedMessage + "\";" +
+                "\n" +
+                "INSERT INTO Draft (Number, ReceivedMessage, DraftMessage)\n" +
+                "SELECT '" + receivedNumber + "', \"" + receivedMessage + "\", '" + draftMessage.getText().toString() + "  \n" +
+                "WHERE (Select Changes() = 0);");
+
+        database.close();
 
         Log.d(msg, "The Reply onStop() event");
     }
@@ -74,6 +73,7 @@ public class SMSReply extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        database.close();
         Log.d(msg, "The Reply onDestroy() event");
     }
 }

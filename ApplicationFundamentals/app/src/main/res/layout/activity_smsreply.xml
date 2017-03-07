@@ -12,10 +12,10 @@
     android:orientation="vertical">
 
     <TextView
-        android:text="@string/message"
+        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/messageHeader" />
+        android:id="@+id/inboxNumber" />
 
     <TextView
         android:text=""
