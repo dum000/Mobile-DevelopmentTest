@@ -59,6 +59,7 @@ public class SMSReply extends Activity {
                 "UPDATE Draft\n" +
                 "SET DraftMessage='" + draftMessage.getText().toString() + "'\n" +
                 "WHERE Number=\"" + receivedNumber + "\" AND ReceivedMessage=\"" + receivedMessage + "\";" +
+
                 "\n" +
                 "INSERT INTO Draft (Number, ReceivedMessage, DraftMessage)\n" +
                 "SELECT '" + receivedNumber + "', \"" + receivedMessage + "\", '" + draftMessage.getText().toString() + "  \n" +

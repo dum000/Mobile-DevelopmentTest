@@ -1,25 +1,25 @@
 package parrtim.storageexample;
 
 import android.app.ListActivity;
-import android.content.SharedPreferences;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends ListActivity {
 
     private ArrayList<String> listValues;
     private ArrayAdapter<String> listAdapter;
-    private static final String FILENAME = "myStorage";
     private EditText editText;
+    private final String DATABASENAME = "Storage";
+    private final String TABLENAME = "item";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +46,18 @@ public class MainActivity extends ListActivity {
 
         if (listValues.isEmpty())
         {
-            try {
-                FileInputStream inFile = openFileInput(FILENAME);
-                ObjectInputStream inputStream = new ObjectInputStream(inFile);
-                ArrayList<String> listFromStorage = (ArrayList<String>) inputStream.readObject();
-                inputStream.close();
-                inFile.close();
+            DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getApplicationContext());
+            SQLiteDatabase readableDatabase = databaseOpenHelper.getReadableDatabase();
 
-                listValues.addAll(listFromStorage);
-                listAdapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                e.printStackTrace();
+            Cursor cursor = readableDatabase.rawQuery("SELECT * FROM " + TABLENAME, null);
+            while (cursor.moveToNext())
+            {
+                listValues.add(cursor.getString(0));
             }
 
+            cursor.close();
+            readableDatabase.close();
+            listAdapter.notifyDataSetChanged();
         }
     }
 
@@ -68,18 +67,35 @@ public class MainActivity extends ListActivity {
 
         if (!listValues.isEmpty())
         {
-            try
+            DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getApplicationContext());
+            SQLiteDatabase writableDatabase = databaseOpenHelper.getWritableDatabase();
+            writableDatabase.delete(TABLENAME, null, null);
+
+            ContentValues values = new ContentValues();
+
+            for (String item : listValues)
             {
-                FileOutputStream outFile = openFileOutput(FILENAME, MODE_PRIVATE);
-                ObjectOutputStream outputStream = new ObjectOutputStream(outFile);
-                outputStream.writeObject(listValues);
-                outputStream.close();
-                outFile.close();
+                values.put("name", item);
+                writableDatabase.insert(TABLENAME, null, values);
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            writableDatabase.close();
+        }
+    }
+
+    public class DatabaseOpenHelper extends SQLiteOpenHelper
+    {
+        public DatabaseOpenHelper(Context context) {
+            super(context, DATABASENAME, null, 1);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL("CREATE TABLE " + TABLENAME +  "(name vchar(32));");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
         }
     }
 }
