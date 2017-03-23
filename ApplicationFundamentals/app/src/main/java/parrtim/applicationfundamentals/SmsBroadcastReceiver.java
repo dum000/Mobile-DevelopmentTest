@@ -20,6 +20,6 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
         i.putExtra("message", messages[0].getMessageBody());
         i.putExtra("number", messages[0].getOriginatingAddress());
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        context.startActivity(i);
+        //context.startActivity(i);
     }
 }

@@ -12,22 +12,14 @@
     android:orientation="vertical">
 
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/inboxNumber" />
 
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/inboxMessage" />
-
-    <TextView
-        android:text="@string/response"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/responseHeader" />
 
     <EditText
         android:layout_width="match_parent"
@@ -36,10 +28,25 @@
         android:ems="10"
         android:id="@+id/replyMessage" />
 
-    <Button
-        android:text="@string/reply"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/replyButton" />
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="Camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cameraButton"
+            android:onClick="OnCameraButtonClick"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="@string/reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/replyButton"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 </LinearLayout>
