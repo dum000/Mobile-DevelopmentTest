@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="LightAppTheme" parent="Theme.AppCompat.Light">
+    <style name="LightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:textSize">15sp</item>
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="DarkAppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="DarkAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:textSize">15sp</item>
         <!-- Customize your theme here. -->
