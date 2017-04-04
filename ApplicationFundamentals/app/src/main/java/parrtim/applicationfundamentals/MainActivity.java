@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,13 +23,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     SMSListAdapter adapter;
     ListView listView;
@@ -48,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         Log.d(msg, "OnCreate event");
         retrieveSharePreferences();
         setContentView(R.layout.activity_main);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
@@ -55,6 +53,9 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, myToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_SMS) == PermissionChecker.PERMISSION_DENIED)
         {
@@ -67,15 +68,15 @@ public class MainActivity extends AppCompatActivity
             // Start lengthy operation in a background thread
             new Thread(new Runnable() {
                 public void run() {
-                    retrieveSMS();
+                    retrieveSMSInbox();
                 }
             }).start();
         }
     }
 
-    private void retrieveSMS()
+    private void retrieveSMSInbox()
     {
-        messages = getSMS();
+        getSMSInbox();
         adapter = new SMSListAdapter(getApplicationContext(), messages);
         listView = (ListView) findViewById(R.id.messageList);
         runOnUiThread(new Runnable()
@@ -123,7 +124,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     protected void onNewIntent(Intent intent)
     {
@@ -134,12 +134,15 @@ public class MainActivity extends AppCompatActivity
         super.onNewIntent(intent);
     }
 
-    public ArrayList<SMSInfo> getSMS()
+    public void getSMSInbox()
     {
-        ArrayList<SMSInfo> sms = new ArrayList<>();
+        messages.clear();
         Cursor cur = getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null);
 
         mProgress.setMax(cur.getCount());
+
+        int addressIndex = cur.getColumnIndex("address");
+        int bodyIndex = cur.getColumnIndex("body");
 
         while (cur.moveToNext())
         {
@@ -148,13 +151,12 @@ public class MainActivity extends AppCompatActivity
                     mProgress.setProgress(mProgressStatus++);
                 }
             });
-            String address = cur.getString(cur.getColumnIndex("address"));
-            String body = cur.getString(cur.getColumnIndexOrThrow("body"));
-            sms.add(new SMSInfo(address, body));
+            String address = cur.getString(addressIndex);
+            String body = cur.getString(bodyIndex);
+            messages.add(new SMSInfo(address, body));
         }
 
         cur.close();
-        return sms;
     }
 
     @Override
@@ -188,7 +190,7 @@ public class MainActivity extends AppCompatActivity
                     // Start lengthy operation in a background thread
                     new Thread(new Runnable() {
                         public void run() {
-                            retrieveSMS();
+                            retrieveSMSInbox();
                         }
                     }).start();
                 }
@@ -200,6 +202,25 @@ public class MainActivity extends AppCompatActivity
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.conversations) {
+
+        } else if (id == R.id.inbox) {
+
+        } else if (id == R.id.sent) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
 
