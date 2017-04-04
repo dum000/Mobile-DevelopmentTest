@@ -80,4 +80,7 @@
     <string name="font_size">Font Size</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
