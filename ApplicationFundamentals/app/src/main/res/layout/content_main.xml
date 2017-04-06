@@ -16,10 +16,4 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:id="@+id/messageList" />
 
-    <ProgressBar
-    style="?android:attr/progressBarStyleLarge"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/progressBar" />
-
 </RelativeLayout>

@@ -1,15 +1,17 @@
 package parrtim.applicationfundamentals;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v4.view.GravityCompat;
@@ -24,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -34,10 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView listView;
     ArrayList<SMSInfo> messages;
     String msg = "Main Activity";
-
-    private ProgressBar mProgress;
-    private int mProgressStatus = 0;
-    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,40 +60,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
-            mProgress = (ProgressBar) findViewById(R.id.progressBar);
-
-            // Start lengthy operation in a background thread
-            new Thread(new Runnable() {
-                public void run() {
-                    retrieveSMSInbox();
-                }
-            }).start();
+            retrieveSMSInbox();
         }
     }
 
     private void retrieveSMSInbox()
     {
-        getSMSInbox();
+        messages = new ArrayList<>();
+        SMSUtil.getSMSInbox(getApplicationContext());
         adapter = new SMSListAdapter(getApplicationContext(), messages);
-        listView = (ListView) findViewById(R.id.messageList);
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run() {
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(getApplicationContext(), SMSReply.class);
-                        SMSInfo message = (SMSInfo) parent.getItemAtPosition(position);
-                        intent.putExtra("message", message.Message);
-                        intent.putExtra("number", message.Number);
-                        startActivity(intent);
-                    }
-                });
-                mProgress.setVisibility(View.GONE);
-            }
-        });
+//        listView = (ListView) findViewById(R.id.messageList);
+//        listView.setAdapter(adapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(getApplicationContext(), SMSReply.class);
+//                SMSInfo message = (SMSInfo) parent.getItemAtPosition(position);
+//                intent.putExtra("message", message.Message);
+//                intent.putExtra("number", message.Number);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     protected void retrieveSharePreferences()
@@ -134,31 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onNewIntent(intent);
     }
 
-    public void getSMSInbox()
-    {
-        messages.clear();
-        Cursor cur = getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null);
-
-        mProgress.setMax(cur.getCount());
-
-        int addressIndex = cur.getColumnIndex("address");
-        int bodyIndex = cur.getColumnIndex("body");
-
-        while (cur.moveToNext())
-        {
-            mHandler.post(new Runnable() {
-                public void run() {
-                    mProgress.setProgress(mProgressStatus++);
-                }
-            });
-            String address = cur.getString(addressIndex);
-            String body = cur.getString(bodyIndex);
-            messages.add(new SMSInfo(address, body));
-        }
-
-        cur.close();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
@@ -185,14 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case 0:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    mProgress = (ProgressBar) findViewById(R.id.progressBar);
-
-                    // Start lengthy operation in a background thread
-                    new Thread(new Runnable() {
-                        public void run() {
-                            retrieveSMSInbox();
-                        }
-                    }).start();
+                    retrieveSMSInbox();
                 }
         }
     }
