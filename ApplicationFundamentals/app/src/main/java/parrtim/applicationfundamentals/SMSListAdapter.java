@@ -11,9 +11,7 @@ import java.util.List;
 
 public class SMSListAdapter extends ArrayAdapter<SMSInfo> {
 
-    // List context
     private final Context context;
-    // List values
     private final List<SMSInfo> smsList;
 
     public SMSListAdapter(Context context, List<SMSInfo> smsList)
