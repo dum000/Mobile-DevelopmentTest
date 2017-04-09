@@ -1,17 +1,14 @@
 package parrtim.applicationfundamentals;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v4.view.GravityCompat;
@@ -23,17 +20,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-    SMSListAdapter adapter;
-    ListView listView;
-    ArrayList<SMSInfo> messages;
     String msg = "Main Activity";
 
     @Override
@@ -58,29 +47,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             ActivityCompat.requestPermissions(this, new String[]{ android.Manifest.permission.READ_SMS }, 0);
         }
-        else
-        {
-            retrieveSMSInbox();
-        }
-    }
 
-    private void retrieveSMSInbox()
-    {
-        messages = new ArrayList<>();
-        SMSUtil.getSMSInbox(getApplicationContext());
-        adapter = new SMSListAdapter(getApplicationContext(), messages);
-//        listView = (ListView) findViewById(R.id.messageList);
-//        listView.setAdapter(adapter);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getApplicationContext(), SMSReply.class);
-//                SMSInfo message = (SMSInfo) parent.getItemAtPosition(position);
-//                intent.putExtra("message", message.Message);
-//                intent.putExtra("number", message.Number);
-//                startActivity(intent);
-//            }
-//        });
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame1, new InboxFragment()).commit();
     }
 
     protected void retrieveSharePreferences()
@@ -109,16 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onNewIntent(Intent intent)
-    {
-        String message = intent.getStringExtra("message");
-        String number = intent.getStringExtra("number");
-        Log.d(msg, message);
-        adapter.add(new SMSInfo(number, message));
-        super.onNewIntent(intent);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
@@ -138,21 +97,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 0:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    retrieveSMSInbox();
+
                 }
-        }
-    }
-
-    private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
         }
     }
 
@@ -161,14 +112,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        android.support.v4.app.Fragment fragment;
 
         if (id == R.id.conversations) {
-
+            fragment = new ConversationFragment();
         } else if (id == R.id.inbox) {
-
-        } else if (id == R.id.sent) {
-
+            fragment = new InboxFragment();
+        } else /*(id == R.id.sent)*/ {
+            fragment = new SentFragment();
         }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame1, fragment)
+                .commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
