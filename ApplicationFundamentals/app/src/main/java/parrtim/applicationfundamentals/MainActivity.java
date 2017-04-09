@@ -1,7 +1,6 @@
 package parrtim.applicationfundamentals;
 
-import android.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,12 +8,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +26,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     String msg = "Main Activity";
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.mainmenu, menu);
+
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+
         return true;
     }
 
@@ -112,12 +118,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        android.support.v4.app.Fragment fragment;
+        final android.support.v4.app.Fragment fragment;
 
         if (id == R.id.conversations) {
             fragment = new ConversationFragment();
         } else if (id == R.id.inbox) {
             fragment = new InboxFragment();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    ((InboxFragment)fragment).Filter(newText);
+                    return true;
+                }
+            });
         } else /*(id == R.id.sent)*/ {
             fragment = new SentFragment();
         }

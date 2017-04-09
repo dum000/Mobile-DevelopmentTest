@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class InboxFragment extends ListFragment implements AdapterView.OnItemClickListener {
@@ -30,5 +29,10 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    public void Filter(String filterText)
+    {
+        adapter.getFilter().filter(filterText);
     }
 }
