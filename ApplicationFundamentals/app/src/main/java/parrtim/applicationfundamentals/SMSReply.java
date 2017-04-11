@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public class SMSReply extends Activity {
     String receivedNumber;
     String msg = "ReplyActivity";
     DictionaryOpenHelper database;
+    String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,23 +100,17 @@ public class SMSReply extends Activity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            }
-            catch (IOException ex)
-            {
+            } catch (IOException ex) {
                 Toast.makeText(getApplicationContext(), "Photo was not saved", Toast.LENGTH_LONG).show();
             }
 
             if (photoFile != null) {
-                Uri photoURI = getUriForFile(this,
-                        "parrtim.applicationfundamentals.fileprovider",
-                        photoFile);
+                Uri photoURI = getUriForFile(this, "parrtim.applicationfundamentals.fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, 1);
             }
         }
     }
-
-    String mCurrentPhotoPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -130,5 +126,16 @@ public class SMSReply extends Activity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    public void SendMessage(View view) {
+
+        TextView number = (TextView) findViewById(R.id.inboxNumber);
+        TextView message = (TextView) findViewById(R.id.inboxMessage);
+
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(number.getText().toString(), null, message.getText().toString(), null, null);
+        Toast.makeText(getApplicationContext(), "SMS sent.",
+                Toast.LENGTH_LONG).show();
     }
 }

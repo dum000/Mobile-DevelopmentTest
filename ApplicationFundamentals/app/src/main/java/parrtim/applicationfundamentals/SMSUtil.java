@@ -64,4 +64,23 @@ public class SMSUtil {
         cur.close();
         return messages;
     }
+
+    public static ArrayList<ConversationInfo> getSMSThreads(Context context)
+    {
+        ArrayList<ConversationInfo> messages = new ArrayList<>();
+        Cursor cur = context.getContentResolver().query(Telephony.Threads.CONTENT_URI, null, null, null, null);
+
+        int snippet_index = cur.getColumnIndex("snippet");
+        int msg_count_index = cur.getColumnIndex("msg_count");
+
+        while (cur.moveToNext())
+        {
+            String snippet = cur.getString(snippet_index);
+            String msg_count = cur.getString(msg_count_index);
+            messages.add(new ConversationInfo(snippet, msg_count));
+        }
+
+        cur.close();
+        return messages;
+    }
 }
