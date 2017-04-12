@@ -4,6 +4,15 @@
     android:layout_height="match_parent"
     tools:context="parrtim.applicationfundamentals.SMSMessageParent">
 
-    <!-- TODO: Update blank fragment layout -->
+    <fragment
+        android:id="@+id/messages_fragment"
+        android:name="parrtim.applicationfundamentals.InboxFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:id="@+id/response_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

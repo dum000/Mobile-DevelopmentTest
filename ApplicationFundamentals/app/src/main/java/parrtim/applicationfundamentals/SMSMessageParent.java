@@ -8,14 +8,10 @@ import android.view.ViewGroup;
 
 public class SMSMessageParent extends Fragment {
 
-    public SMSMessageParent() {
-
-    }
+    public SMSMessageParent() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         return inflater.inflate(R.layout.fragment_smsmessage_parent, container, false);
     }
 

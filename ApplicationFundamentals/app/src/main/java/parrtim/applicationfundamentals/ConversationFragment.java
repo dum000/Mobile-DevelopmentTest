@@ -35,3 +35,4 @@ public class ConversationFragment extends ListFragment implements AdapterView.On
         Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
     }
 }
+

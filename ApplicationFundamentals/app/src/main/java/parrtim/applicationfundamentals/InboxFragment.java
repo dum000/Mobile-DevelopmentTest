@@ -16,7 +16,6 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         adapter = new InboxListAdapter(getContext(), SMSUtil.getSMSInbox(getContext()));
-//        SMSUtil.getSMSThreads(getContext());
         return inflater.inflate(R.layout.fragment_inbox_list, container, false);
     }
 
