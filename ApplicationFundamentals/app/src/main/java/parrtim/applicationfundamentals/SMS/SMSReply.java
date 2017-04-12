@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.SMS;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import parrtim.applicationfundamentals.DictionaryOpenHelper;
+import parrtim.applicationfundamentals.R;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
 

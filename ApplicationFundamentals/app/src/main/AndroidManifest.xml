@@ -29,7 +29,7 @@
         </activity>
 
         <receiver
-            android:name=".SmsBroadcastReceiver"
+            android:name=".SMS.SMSBroadcastReceiver"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER_ACTION" />
@@ -37,7 +37,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".SMSReply" />
+        <activity android:name=".SMS.SMSReply" />
         <activity
             android:name=".FundamentalsSettings"
             android:label="@string/title_activity_fundamentals_settings" />

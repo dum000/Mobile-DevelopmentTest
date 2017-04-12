@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.SMS;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,7 +7,9 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-public class SmsBroadcastReceiver extends BroadcastReceiver {
+import parrtim.applicationfundamentals.MainActivity;
+
+public class SMSBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);

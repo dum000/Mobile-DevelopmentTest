@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import parrtim.applicationfundamentals.SMS.SMSUtil;
+
 public class ThreadFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     ConversationListAdapter adapter;

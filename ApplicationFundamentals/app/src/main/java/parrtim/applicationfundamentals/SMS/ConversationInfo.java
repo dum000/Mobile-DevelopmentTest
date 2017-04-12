@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.SMS;
 
 public class ConversationInfo  {
 
@@ -10,3 +10,4 @@ public class ConversationInfo  {
         this.Message_Count = message_count;
     }
 }
+

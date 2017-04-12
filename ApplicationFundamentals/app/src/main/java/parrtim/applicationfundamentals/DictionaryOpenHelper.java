@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.io.FileNotFoundException;
-
 public class DictionaryOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
@@ -23,7 +21,7 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase database;
 
-    DictionaryOpenHelper(Context context) {
+    public DictionaryOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         try {
             database = context.openOrCreateDatabase(DATABASE_NAME, 0, null);

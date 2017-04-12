@@ -11,6 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import parrtim.applicationfundamentals.SMS.InboxInfo;
+
 /**
  * Created by tparr on 4/11/2017.
  */

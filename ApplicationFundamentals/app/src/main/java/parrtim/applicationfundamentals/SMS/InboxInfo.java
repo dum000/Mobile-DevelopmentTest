@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.SMS;
 
 public class InboxInfo {
 

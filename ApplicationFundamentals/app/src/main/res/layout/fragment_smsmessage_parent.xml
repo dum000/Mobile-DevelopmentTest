@@ -1,18 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="parrtim.applicationfundamentals.SMSMessageParent">
+    tools:context="parrtim.applicationfundamentals.SMS.SMSMessageParent"
+    android:orientation="vertical">
 
     <fragment
         android:id="@+id/messages_fragment"
-        android:name="parrtim.applicationfundamentals.InboxFragment"
+        android:name="parrtim.applicationfundamentals.ConversationFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight=".9"
+        tools:layout="@layout/fragment_conversation_list" />
 
     <fragment
         android:id="@+id/response_fragment"
+        android:name="parrtim.applicationfundamentals.SMS.SMSMessageFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        tools:layout="@layout/fragment_smsmessage" />
 
-</FrameLayout>
+</LinearLayout>

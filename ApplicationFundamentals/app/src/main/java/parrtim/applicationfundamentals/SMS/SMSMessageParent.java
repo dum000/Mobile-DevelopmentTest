@@ -1,10 +1,12 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.SMS;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import parrtim.applicationfundamentals.R;
 
 public class SMSMessageParent extends Fragment {
 

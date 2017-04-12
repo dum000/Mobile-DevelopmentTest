@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import parrtim.applicationfundamentals.SMS.ConversationInfo;
+
 public class ConversationListAdapter extends ArrayAdapter<ConversationInfo> {
 
     private final Context context;
