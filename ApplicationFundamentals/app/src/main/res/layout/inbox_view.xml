@@ -9,17 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/Number"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="18sp"
-        android:textColor="@android:color/background_dark"
-        android:textAllCaps="false"
-        android:textAlignment="textStart" />
+        style="@style/ContactText"/>
 
     <TextView
         android:text="Message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Message"
-        android:textColor="@color/colorPrimary" />
+        style="@style/GrayText"
+        android:id="@+id/Message" />
 </LinearLayout>

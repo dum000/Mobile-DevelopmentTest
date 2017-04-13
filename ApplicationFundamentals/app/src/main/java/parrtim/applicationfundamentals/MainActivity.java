@@ -1,6 +1,5 @@
 package parrtim.applicationfundamentals;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(msg, "OnCreate event");
-        retrieveSharePreferences();
+        //retrieveSharePreferences();
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -57,27 +56,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     protected void retrieveSharePreferences()
     {
-        SharedPreferences preferences = getSharedPreferences("Settings", 0);
-        String theme = preferences.getString("Theme", null);
-
-        if (theme == null)
-        {
-            SharedPreferences.Editor edit = preferences.edit();
-            edit.putString("Theme", "DarkAppTheme");
-            setTheme(R.style.DarkAppTheme);
-        }
-        else if (theme.equals("DarkAppTheme"))
-        {
-            setTheme(R.style.DarkAppTheme);
-        }
-        else if (theme.equals("LightAppTheme"))
-        {
-            setTheme(R.style.LightAppTheme);
-        }
-        else
-        {
-            Log.d(msg,"Theme was unexpected value: " + theme);
-        }
+//        SharedPreferences preferences = getSharedPreferences("Settings", 0);
+//        String theme = preferences.getString("Theme", null);
+//
+//        if (theme == null)
+//        {
+//            SharedPreferences.Editor edit = preferences.edit();
+//            edit.putString("Theme", "DarkAppTheme");
+//            setTheme(R.style.DarkAppTheme);
+//        }
+//        else if (theme.equals("DarkAppTheme"))
+//        {
+//            setTheme(R.style.DarkAppTheme);
+//        }
+//        else if (theme.equals("LightAppTheme"))
+//        {
+//            setTheme(R.style.LightAppTheme);
+//        }
+//        else
+//        {
+//            Log.d(msg,"Theme was unexpected value: " + theme);
+//        }
     }
 
     @Override

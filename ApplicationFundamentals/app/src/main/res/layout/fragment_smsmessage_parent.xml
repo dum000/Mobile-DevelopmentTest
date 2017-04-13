@@ -7,18 +7,18 @@
 
     <fragment
         android:id="@+id/messages_fragment"
-        android:name="parrtim.applicationfundamentals.ConversationFragment"
+        android:name="parrtim.applicationfundamentals.InboxFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".9"
-        tools:layout="@layout/fragment_conversation_list" />
+        android:layout_weight=".85"
+        tools:layout="@layout/fragment_inbox_list" />
 
     <fragment
         android:id="@+id/response_fragment"
         android:name="parrtim.applicationfundamentals.SMS.SMSMessageFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".1"
+        android:layout_weight=".15"
         tools:layout="@layout/fragment_smsmessage" />
 
 </LinearLayout>

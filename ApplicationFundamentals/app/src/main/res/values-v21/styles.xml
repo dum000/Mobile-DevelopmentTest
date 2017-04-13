@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:colorControlActivated">#004176</item>
+        <item name="android:colorAccent">#004176</item>
+        <item name="android:statusBarColor">#AAA</item>
+        <item name="colorPrimary">@android:color/background_light</item>
+    </style>
+
+</resources>

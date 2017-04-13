@@ -9,8 +9,7 @@
     <EditText
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:maxLines="10"
+        android:maxLines="5"
         android:id="@+id/sendMessageText"
         android:layout_weight=".9" />
 
@@ -20,5 +19,6 @@
         android:layout_height="match_parent"
         android:id="@+id/sendMessageButton"
         android:layout_weight=".1"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:onClick="SendMessage"/>
 </LinearLayout>
