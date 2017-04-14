@@ -1,7 +1,5 @@
 package Objects;
 
-import java.io.Console;
-
 public class NumberHolder {
     public int anInt;
     public float aFloat;
