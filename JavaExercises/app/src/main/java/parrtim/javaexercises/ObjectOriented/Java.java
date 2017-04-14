@@ -1,4 +1,4 @@
-package parrtim.javaexercises;
+package parrtim.javaexercises.ObjectOriented;
 
 public class Java implements ProgrammingLanguage {
 

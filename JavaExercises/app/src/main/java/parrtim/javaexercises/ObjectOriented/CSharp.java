@@ -1,4 +1,4 @@
-package parrtim.javaexercises;
+package parrtim.javaexercises.ObjectOriented;
 
 public class CSharp implements ProgrammingLanguage {
 
@@ -16,8 +16,8 @@ public class CSharp implements ProgrammingLanguage {
         return exampleHelloWorld;
     }
 
-//    @Override
-//    public String GetName() {
-//        return name;
-//    }
+    @Override
+    public String GetName() {
+        return name;
+    }
 }
