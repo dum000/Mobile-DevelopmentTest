@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
@@ -7,18 +7,31 @@
     android:layout_width="match_parent">
 
     <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:inputType="textImeMultiLine"
+        android:textSize="16sp"
+        android:layout_height="39dp"
         android:maxLines="5"
         android:id="@+id/sendMessageText"
-        android:layout_weight=".9" />
+        android:labelFor="@+id/message_input"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/sendMessageButton"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="viewStart" />
 
     <ImageButton
         app:srcCompat="@drawable/ic_send_black_24dp"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="48dp"
+        android:layout_height="44dp"
         android:id="@+id/sendMessageButton"
-        android:layout_weight=".1"
         android:scaleType="fitCenter"
-        android:onClick="SendMessage"/>
-</LinearLayout>
+        android:onClick="SendMessage"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>
