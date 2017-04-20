@@ -7,6 +7,17 @@
     android:orientation="vertical">
 
     <fragment
+        android:id="@+id/messages_fragment"
+        android:name="parrtim.applicationfundamentals.InboxFragment"
+        tools:layout="@layout/fragment_inbox_list"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/response_fragment"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <fragment
         android:id="@+id/response_fragment"
         android:name="parrtim.applicationfundamentals.SMS.SMSMessageFragment"
         tools:layout="@layout/fragment_smsmessage"
@@ -15,15 +26,5 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <fragment
-        android:id="@+id/messages_fragment"
-        android:name="parrtim.applicationfundamentals.InboxFragment"
-        tools:layout="@layout/fragment_inbox_list"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_height="100dp" />
 
 </android.support.constraint.ConstraintLayout>
