@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="parrtim.applicationfundamentals.SMS.SMSMessageParent"
     android:orientation="vertical">
-
+    
     <fragment
         android:id="@+id/messages_fragment"
         android:name="parrtim.applicationfundamentals.InboxFragment"
