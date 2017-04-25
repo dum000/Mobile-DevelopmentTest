@@ -9,6 +9,7 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -22,7 +23,7 @@ public class SMSUtil {
 
     static SimpleDateFormat simpleDate;
 
-    public static ArrayList<InboxInfo> getSMSInbox(Context context) throws ParseException {
+    public static ArrayList<InboxInfo> getSMSInbox(Context context) {
         ArrayList<InboxInfo> messages = new ArrayList<>();
         Cursor cur = context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null);
 
@@ -32,14 +33,19 @@ public class SMSUtil {
         int bodyIndex = cur.getColumnIndex("body");
         int dateIndex = cur.getColumnIndex("date");
 
-        simpleDate = new SimpleDateFormat();
+        simpleDate = new SimpleDateFormat("MM/dd/yyyy");
 
         while (cur.moveToNext())
         {
             String address = cur.getString(addressIndex);
             String body = cur.getString(bodyIndex);
-            Date date = simpleDate.parse(cur.getString(dateIndex));
-            messages.add(new InboxInfo(address, body, date, false));
+            try {
+                Date date = simpleDate.parse(simpleDate.format(cur.getLong(dateIndex)));
+                messages.add(new InboxInfo(address, body, date, false));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.d("Error", e.toString());
+            }
         }
 
         cur.close();
@@ -65,7 +71,7 @@ public class SMSUtil {
         return messages;
     }
 
-    public static ArrayList<InboxInfo> getSMSSent(Context context) throws ParseException {
+    public static ArrayList<InboxInfo> getSMSSent(Context context) {
         ArrayList<InboxInfo> messages = new ArrayList<>();
         Cursor cur = context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null);
 
@@ -79,8 +85,12 @@ public class SMSUtil {
         {
             String address = cur.getString(addressIndex);
             String body = cur.getString(bodyIndex);
-            Date date = simpleDate.parse(cur.getString(dateIndex));
-            messages.add(new InboxInfo(address, body, date, true));
+            try {
+                Date date = simpleDate.parse(cur.getString(dateIndex));
+                messages.add(new InboxInfo(address, body, date, true));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         cur.close();
@@ -88,13 +98,13 @@ public class SMSUtil {
     }
 
     @SuppressWarnings("Since15")
-    public static ArrayList<InboxInfo> getConversation(Context context) throws ParseException {
+    public static ArrayList<InboxInfo> getConversation(Context context) {
         ArrayList<InboxInfo> incomingMessages = getSMSInbox(context);
         ArrayList<InboxInfo> outgoingMessages = getSMSSent(context);
 
         incomingMessages.addAll(outgoingMessages);
 
-        incomingMessages.sort(new Comparator<InboxInfo>() {
+        Collections.sort(incomingMessages, new Comparator<InboxInfo>() {
             @Override
             public int compare(InboxInfo inboxInfo, InboxInfo t1) {
                 return inboxInfo.Date.compareTo(t1.Date);

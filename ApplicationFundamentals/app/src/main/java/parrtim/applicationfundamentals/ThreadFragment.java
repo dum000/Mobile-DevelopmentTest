@@ -17,7 +17,7 @@ public class ThreadFragment extends ListFragment implements AdapterView.OnItemCl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        adapter = new ConversationListAdapter(getContext(), SMSUtil.getSMSConversations(getContext()));
+        adapter = new ConversationListAdapter(getContext(), SMSUtil.getConversation(getContext()));
         return inflater.inflate(R.layout.fragment_conversation_list, container, false);
     }
 
