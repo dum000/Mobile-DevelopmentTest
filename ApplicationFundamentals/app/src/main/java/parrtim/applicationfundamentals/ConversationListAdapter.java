@@ -28,6 +28,7 @@ public class ConversationListAdapter extends ArrayAdapter<InboxInfo> {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView;
+
         if (smsList.get(position).Incoming)
         {
             rowView = inflater.inflate(R.layout.conversation_left, parent, false);
