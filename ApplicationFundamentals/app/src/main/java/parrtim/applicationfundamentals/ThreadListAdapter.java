@@ -11,19 +11,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import parrtim.applicationfundamentals.SMS.ConversationInfo;
 import parrtim.applicationfundamentals.SMS.InboxInfo;
 
 /**
  * Created by tparr on 4/11/2017.
  */
 
-public class ThreadListAdapter extends ArrayAdapter<InboxInfo> implements Filterable {
+public class ThreadListAdapter extends ArrayAdapter<ConversationInfo> implements Filterable {
 
     private Context context;
-    private List<InboxInfo> smsList;
-    private List<InboxInfo> originalsmsList;
+    private List<ConversationInfo> smsList;
+    private List<ConversationInfo> originalsmsList;
 
-    public ThreadListAdapter(Context context, List<InboxInfo> smsList) {
+    public ThreadListAdapter(Context context, List<ConversationInfo> smsList) {
         super(context, R.layout.activity_main, smsList);
         this.context = context;
         this.smsList = smsList;
@@ -35,18 +36,21 @@ public class ThreadListAdapter extends ArrayAdapter<InboxInfo> implements Filter
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.inbox_view, parent, false);
+        View rowView = inflater.inflate(R.layout.conversation_view, parent, false);
 
         if (position >= smsList.size()) {
             rowView.setVisibility(View.INVISIBLE);
             return rowView;
         }
 
-        TextView senderNumber = (TextView) rowView.findViewById(R.id.Number);
-        senderNumber.setText(smsList.get(position).Number);
+        TextView message = (TextView) rowView.findViewById(R.id.message_count);
+        message.setText(smsList.get(position).Message_Count);
 
-        TextView senderMessage = (TextView) rowView.findViewById(R.id.Message);
-        senderMessage.setText(smsList.get(position).Message);
+        TextView threadId = (TextView) rowView.findViewById(R.id.thread_id);
+        threadId.setText(smsList.get(position).Thread_ID);
+
+        TextView snippet = (TextView) rowView.findViewById(R.id.snippet);
+        snippet.setText(smsList.get(position).Snippet);
 
         return rowView;
     }

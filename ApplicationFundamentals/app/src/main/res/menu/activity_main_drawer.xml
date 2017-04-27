@@ -8,6 +8,9 @@
         <item
             android:id="@+id/inbox"
             android:title="Inbox" />
+        <item
+            android:id="@+id/threads"
+            android:title="Threads" />
     </group>
 
 </menu>

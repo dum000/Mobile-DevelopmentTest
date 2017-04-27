@@ -134,8 +134,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     return true;
                 }
             });
-        } else /*(id == R.id.sent)*/ {
-            fragment = new SentFragment();
+        } else  {
+            fragment = new ThreadFragment();
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();

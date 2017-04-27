@@ -3,6 +3,7 @@ package parrtim.applicationfundamentals.SMS;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.Telephony;
 import android.util.Log;
 
@@ -50,24 +51,70 @@ public class SMSUtil {
         return messages;
     }
 
-    public static ArrayList<ConversationInfo> getSMSConversations(Context context)
-    {
-        ArrayList<ConversationInfo> messages = new ArrayList<>();
-        Cursor cur = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI, null, null, null, null);
-
-        int snippet_index = cur.getColumnIndex("snippet");
-        int msg_count_index = cur.getColumnIndex("msg_count");
-
-        while (cur.moveToNext())
-        {
-            String snippet = cur.getString(snippet_index);
-            String msg_count = cur.getString(msg_count_index);
-            messages.add(new ConversationInfo(snippet, msg_count));
-        }
-
-        cur.close();
-        return messages;
-    }
+//    public static ArrayList<ConversationInfo> getSMSConversations(Context context)
+//    {
+//        ArrayList<ConversationInfo> messages = new ArrayList<>();
+//
+//        Cursor inboxCursor = context.getContentResolver().query(
+//                Telephony.Sms.Inbox.CONTENT_URI,
+//                new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
+//                null,
+//                null,
+//                null);
+//
+//        if (inboxCursor != null) {
+//
+//            int addressIndex = inboxCursor.getColumnIndex("address");
+//            int bodyIndex = inboxCursor.getColumnIndex("body");
+//            int dateIndex = inboxCursor.getColumnIndex("date");
+//
+//            while (inboxCursor.moveToNext())
+//            {
+//                String address = inboxCursor.getString(addressIndex);
+//                String body = inboxCursor.getString(bodyIndex);
+//
+//                try {
+//                    Date date = simpleDate.parse(simpleDate.format(inboxCursor.getLong(dateIndex)));
+//                    messages.add(new InboxInfo(address, body, date, true));
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                    Log.d("Error", e.toString());
+//                }
+//            }
+//            inboxCursor.close();
+//        }
+//
+//        Cursor sentCursor = resolver.query(
+//                Telephony.Sms.Sent.CONTENT_URI,
+//                new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
+//                null,
+//                null,
+//                null);
+//
+//        if (sentCursor != null) {
+//
+//            int addressIndex = sentCursor.getColumnIndex("address");
+//            int bodyIndex = sentCursor.getColumnIndex("body");
+//            int dateIndex = sentCursor.getColumnIndex("date");
+//
+//            while (sentCursor.moveToNext())
+//            {
+//                String address = sentCursor.getString(addressIndex);
+//                String body = sentCursor.getString(bodyIndex);
+//
+//                try {
+//                    Date date = simpleDate.parse(simpleDate.format(sentCursor.getLong(dateIndex)));
+//                    messages.add(new InboxInfo(address, body, date, true));
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                    Log.d("Error", e.toString());
+//                }
+//            }
+//            sentCursor.close();
+//        }
+//
+//        return messages;
+//    }
 
     public static ArrayList<InboxInfo> getSMSSent(Context context) {
         ArrayList<InboxInfo> messages = new ArrayList<>();
@@ -95,8 +142,8 @@ public class SMSUtil {
 
     @SuppressWarnings("Since15")
     public static ArrayList<InboxInfo> getConversation(Context context) {
-        ArrayList<InboxInfo> incomingMessages = new ArrayList<>(getSMSInbox(context).subList(0,25));
-        ArrayList<InboxInfo> outgoingMessages = new ArrayList<>(getSMSSent(context).subList(0,25));
+        ArrayList<InboxInfo> incomingMessages = getSMSInbox(context);
+        ArrayList<InboxInfo> outgoingMessages = getSMSSent(context);
 
         incomingMessages.addAll(outgoingMessages);
 
@@ -110,68 +157,26 @@ public class SMSUtil {
         return incomingMessages;
     }
 
-    public static ArrayList<InboxInfo> getSMSThreads(Context context)
+    public static ArrayList<ConversationInfo> getSMSThreads(Context context)
     {
-        ArrayList<InboxInfo> messages = new ArrayList<>();
-        ContentResolver resolver = context.getContentResolver();
-        Cursor inboxCursor = resolver.query(
-                Telephony.Sms.Inbox.CONTENT_URI,
-                new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
-                null,
-                null,
-                null);
+        ArrayList<ConversationInfo> messages = new ArrayList<>();
+        Cursor cur = context.getContentResolver().query(Telephony.Sms.Conversations.CONTENT_URI, null, null, null, null);
 
-        if (inboxCursor != null) {
+        String[] columnNames = cur.getColumnNames();
 
-            int addressIndex = inboxCursor.getColumnIndex("address");
-            int bodyIndex = inboxCursor.getColumnIndex("body");
-            int dateIndex = inboxCursor.getColumnIndex("date");
+        int thread_index = cur.getColumnIndex("thread_id");
+        int snippet_index = cur.getColumnIndex("snippet");
+        int msg_count_index = cur.getColumnIndex("msg_count");
 
-            while (inboxCursor.moveToNext())
-            {
-                String address = inboxCursor.getString(addressIndex);
-                String body = inboxCursor.getString(bodyIndex);
-
-                try {
-                    Date date = simpleDate.parse(simpleDate.format(inboxCursor.getLong(dateIndex)));
-                    messages.add(new InboxInfo(address, body, date, true));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Log.d("Error", e.toString());
-                }
-            }
-            inboxCursor.close();
+        while (cur.moveToNext())
+        {
+            String snippet = cur.getString(snippet_index);
+            String msg_count = cur.getString(msg_count_index);
+            String thread_id = cur.getString(thread_index);
+            messages.add(new ConversationInfo(snippet, msg_count, thread_id));
         }
 
-        Cursor sentCursor = resolver.query(
-                Telephony.Sms.Sent.CONTENT_URI,
-                new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
-                null,
-                null,
-                null);
-
-        if (sentCursor != null) {
-
-            int addressIndex = sentCursor.getColumnIndex("address");
-            int bodyIndex = sentCursor.getColumnIndex("body");
-            int dateIndex = sentCursor.getColumnIndex("date");
-
-            while (sentCursor.moveToNext())
-            {
-                String address = sentCursor.getString(addressIndex);
-                String body = sentCursor.getString(bodyIndex);
-
-                try {
-                    Date date = simpleDate.parse(simpleDate.format(sentCursor.getLong(dateIndex)));
-                    messages.add(new InboxInfo(address, body, date, true));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Log.d("Error", e.toString());
-                }
-            }
-            sentCursor.close();
-        }
-
+        cur.close();
         return messages;
     }
 }

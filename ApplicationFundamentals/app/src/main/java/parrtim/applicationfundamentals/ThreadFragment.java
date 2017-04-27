@@ -13,11 +13,11 @@ import parrtim.applicationfundamentals.SMS.SMSUtil;
 
 public class ThreadFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
-    ConversationListAdapter adapter;
+    ThreadListAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        adapter = new ConversationListAdapter(getContext(), SMSUtil.getConversation(getContext()));
+        adapter = new ThreadListAdapter(getContext(), SMSUtil.getSMSThreads(getContext()));
         return inflater.inflate(R.layout.fragment_conversation_list, container, false);
     }
 
