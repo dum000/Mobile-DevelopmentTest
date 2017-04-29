@@ -3,6 +3,7 @@ package parrtim.applicationfundamentals;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,17 @@ public class ConversationFragment extends ListFragment implements AdapterView.On
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        adapter = new ConversationListAdapter(getContext(), SMSUtil.getConversation(getContext()));
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String address = arguments.getString("address");
+            Log.d("Address", address);
+
+            adapter = new ConversationListAdapter(getActivity().getApplicationContext(), SMSUtil.getSMSConversations(getActivity().getApplicationContext(), address));
+        }
+        else {
+            adapter = new ConversationListAdapter(getContext(), SMSUtil.getSMSConversations(getActivity().getApplicationContext()));
+        }
+
         return inflater.inflate(R.layout.fragment_conversation_list, container, false);
     }
 
@@ -30,6 +41,7 @@ public class ConversationFragment extends ListFragment implements AdapterView.On
         super.onActivityCreated(savedInstanceState);
         getListView().setAdapter(adapter);
         getListView().setOnItemClickListener(this);
+        getListView().setSelection(adapter.getCount() - 1);
     }
 
     @Override

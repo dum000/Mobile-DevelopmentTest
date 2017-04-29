@@ -13,18 +13,19 @@ import java.util.List;
 
 import parrtim.applicationfundamentals.SMS.ConversationInfo;
 import parrtim.applicationfundamentals.SMS.InboxInfo;
+import parrtim.applicationfundamentals.SMS.ThreadInfo;
 
 /**
  * Created by tparr on 4/11/2017.
  */
 
-public class ThreadListAdapter extends ArrayAdapter<ConversationInfo> implements Filterable {
+public class ThreadListAdapter extends ArrayAdapter<ThreadInfo> implements Filterable {
 
     private Context context;
-    private List<ConversationInfo> smsList;
-    private List<ConversationInfo> originalsmsList;
+    private List<ThreadInfo> smsList;
+    private List<ThreadInfo> originalsmsList;
 
-    public ThreadListAdapter(Context context, List<ConversationInfo> smsList) {
+    public ThreadListAdapter(Context context, List<ThreadInfo> smsList) {
         super(context, R.layout.activity_main, smsList);
         this.context = context;
         this.smsList = smsList;
@@ -46,8 +47,8 @@ public class ThreadListAdapter extends ArrayAdapter<ConversationInfo> implements
         TextView message = (TextView) rowView.findViewById(R.id.message_count);
         message.setText(smsList.get(position).Message_Count);
 
-        TextView threadId = (TextView) rowView.findViewById(R.id.thread_id);
-        threadId.setText(smsList.get(position).Thread_ID);
+        TextView threadId = (TextView) rowView.findViewById(R.id.number);
+        threadId.setText(smsList.get(position).Sender);
 
         TextView snippet = (TextView) rowView.findViewById(R.id.snippet);
         snippet.setText(smsList.get(position).Snippet);

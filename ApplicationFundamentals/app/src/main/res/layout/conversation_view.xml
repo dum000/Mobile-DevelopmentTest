@@ -4,19 +4,27 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:text="this is a message"
-        android:id="@+id/snippet"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight=".70"/>
 
-    <TextView
-        android:text="5"
-        android:id="@+id/thread_id"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="0dp"
+        android:layout_weight=".90"
         android:layout_height="match_parent"
-        android:layout_weight=".20"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/number"
+            style="@style/ContactText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Number" />
+
+        <TextView
+            android:id="@+id/snippet"
+            style="@style/GrayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Message" />
+    </LinearLayout>
 
     <TextView
         android:text="15"

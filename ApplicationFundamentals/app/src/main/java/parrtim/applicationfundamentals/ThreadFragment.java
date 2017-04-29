@@ -2,6 +2,7 @@ package parrtim.applicationfundamentals;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import parrtim.applicationfundamentals.SMS.ConversationInfo;
 import parrtim.applicationfundamentals.SMS.SMSUtil;
 
 public class ThreadFragment extends ListFragment implements AdapterView.OnItemClickListener {
@@ -30,6 +32,16 @@ public class ThreadFragment extends ListFragment implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putString("address", adapter.getItem(position).Sender);
+
+        ConversationFragment fragment = new ConversationFragment();
+        fragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame1, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

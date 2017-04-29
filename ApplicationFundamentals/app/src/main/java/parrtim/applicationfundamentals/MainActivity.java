@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import parrtim.applicationfundamentals.SMS.SMSUtil;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     String msg = "Main Activity";
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame1, new InboxFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame1, new ThreadFragment()).commit();
     }
 
     protected void retrieveSharePreferences()
@@ -89,6 +91,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("address", intent.getStringExtra("number"));
+
+        ConversationFragment fragment = new ConversationFragment();
+        fragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame1, fragment)
+                .commit();
     }
 
     @Override
