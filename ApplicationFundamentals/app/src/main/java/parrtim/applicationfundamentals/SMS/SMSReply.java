@@ -137,7 +137,7 @@ public class SMSReply extends Activity {
         TextView message = (TextView) findViewById(R.id.inboxMessage);
 
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(number.getText().toString(), null, message.getText().toString(), null, null);
+        smsManager.sendTextMessage(number.getText().toString(), "9514155912", message.getText().toString(), null, null);
         Toast.makeText(getApplicationContext(), "SMS sent.",
                 Toast.LENGTH_LONG).show();
     }

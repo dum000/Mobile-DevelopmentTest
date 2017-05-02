@@ -27,7 +27,7 @@ public class ConversationFragment extends ListFragment implements AdapterView.On
             String address = arguments.getString("address");
             Log.d("Address", address);
 
-            adapter = new ConversationListAdapter(getActivity().getApplicationContext(), SMSUtil.getSMSConversations(getActivity().getApplicationContext(), address));
+            adapter = new ConversationListAdapter(getContext(), SMSUtil.getSMSConversations(getActivity().getApplicationContext(), address));
         }
         else {
             adapter = new ConversationListAdapter(getContext(), SMSUtil.getSMSConversations(getActivity().getApplicationContext()));

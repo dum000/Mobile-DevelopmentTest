@@ -1,9 +1,12 @@
 package parrtim.applicationfundamentals;
 
+import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -14,7 +17,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import parrtim.applicationfundamentals.SMS.SMSBroadcastReceiver;
 import parrtim.applicationfundamentals.SMS.SMSUtil;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -54,6 +60,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frame1, new ThreadFragment()).commit();
+
+        if (Telephony.Sms.getDefaultSmsPackage(this) == null || !Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
+            // App is not default
+            // Show the "not currently set as the default SMS app" interface
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.Theme_AppCompat_Light_NoActionBar));
+            builder.setMessage("TMS is not set as your default messaging app. Do you want to set it default?")
+                    .setCancelable(false)
+                    .setTitle("Alert!")
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                        }
+                    })
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @TargetApi(19)
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            Intent intent =
+                                    new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+
+                            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+                                    getPackageName());
+
+                            startActivity(intent);
+
+                        }
+                    });
+            builder.show();
+        }
     }
 
     protected void retrieveSharePreferences()
@@ -106,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.frame1, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 
