@@ -1,5 +1,7 @@
 package parrtim.applicationfundamentals;
 
+import android.app.IntentService;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -62,5 +64,11 @@ public class OtherSettingsActivity extends AppCompatActivity {
 //        {
 //            Log.d(msg,"Theme was unexpected value: " + theme);
 //        }
+    }
+
+    public void BackupMessages(View view)
+    {
+        Intent intent = new Intent(getApplicationContext(), BackupService.class);
+        startService(intent);
     }
 }

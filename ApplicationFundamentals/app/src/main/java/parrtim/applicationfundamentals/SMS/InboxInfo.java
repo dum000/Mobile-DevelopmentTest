@@ -1,8 +1,9 @@
 package parrtim.applicationfundamentals.SMS;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class InboxInfo {
+public class InboxInfo implements Serializable {
 
     public Date Date;
     public String Number;

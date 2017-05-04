@@ -15,12 +15,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/LightAppTheme">
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,7 +33,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".SMS.SentReciever"
             android:exported="true"
@@ -42,12 +41,12 @@
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".MmsReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
@@ -75,14 +74,14 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".SMS.SMSReply">
-
+        <activity android:name=".SMS.SMSReply">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
@@ -90,6 +89,9 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".BackupService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

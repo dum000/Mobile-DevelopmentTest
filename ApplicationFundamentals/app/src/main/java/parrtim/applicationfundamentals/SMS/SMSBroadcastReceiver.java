@@ -7,11 +7,9 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 import parrtim.applicationfundamentals.MainActivity;
 import parrtim.applicationfundamentals.R;
@@ -28,27 +26,32 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
     public static final int MESSAGE_IS_SEEN = 1;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+    public void onReceive(Context context, Intent intent)
+    {
+        String defaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(context);
+        String packageName = context.getPackageName();
+        if (defaultSmsPackage != null && defaultSmsPackage.equals(packageName))
+        {
+            SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
 
-        putSmsToDatabase(context.getContentResolver(), messages);
+            putSmsToDatabase(context.getContentResolver(), messages);
 
-        Intent i = new Intent(context, MainActivity.class);
-        i.putExtra("message", messages[0].getMessageBody());
-        i.putExtra("number", messages[0].getOriginatingAddress());
+            Intent i = new Intent(context, MainActivity.class);
+            i.putExtra("message", messages[0].getMessageBody());
+            i.putExtra("number", messages[0].getOriginatingAddress());
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_notification)
-                .setContentTitle("New Message")
-                .setContentText(messages[0].getMessageBody())
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.mipmap.ic_notification)
+                    .setContentTitle("New Message")
+                    .setContentText(messages[0].getMessageBody())
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
 
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
-
+            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(1, mBuilder.build());
+        }
     }
 
     private void putSmsToDatabase(ContentResolver contentResolver, SmsMessage[] sms)

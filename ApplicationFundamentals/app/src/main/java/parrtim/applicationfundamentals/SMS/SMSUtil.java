@@ -60,13 +60,14 @@ public class SMSUtil {
 
     public static ArrayList<InboxInfo> getSMSConversations(Context context, String sender)
     {
-        ArrayList<InboxInfo> messages = new ArrayList<>();
+        boolean noSender = sender == "" || sender == null;
 
+        ArrayList<InboxInfo> messages = new ArrayList<>();
         Cursor inboxCursor = context.getContentResolver().query(
                 Telephony.Sms.Inbox.CONTENT_URI,
                 new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
-                Telephony.Sms.Inbox.ADDRESS + " = ?",
-                new String[] { sender },
+                noSender ? null : Telephony.Sms.Inbox.ADDRESS + " = ?",
+                noSender ? null : new String[] { sender },
                 "DATE DESC");
 
         if (inboxCursor != null) {
@@ -94,8 +95,8 @@ public class SMSUtil {
         Cursor sentCursor = context.getContentResolver().query(
                 Telephony.Sms.Sent.CONTENT_URI,
                 new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
-                Telephony.Sms.Inbox.ADDRESS + " = ?",
-                new String[] { sender },
+                noSender ? null : Telephony.Sms.Inbox.ADDRESS + " = ?",
+                noSender ? null : new String[] { sender },
                 "DATE DESC");
 
         if (sentCursor != null) {
@@ -131,7 +132,7 @@ public class SMSUtil {
     }
 
     public static ArrayList<InboxInfo> getSMSConversations(Context context) {
-        return new ArrayList<>();
+        return getSMSConversations(context, null);
     }
 
     public static ArrayList<InboxInfo> getSMSSent(Context context) {
