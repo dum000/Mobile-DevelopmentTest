@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (Telephony.Sms.getDefaultSmsPackage(this) == null || !Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
             // App is not default
-            // Show the "not currently set as the default SMS app" interface
 
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.Theme_AppCompat_Light_NoActionBar));
             builder.setMessage("TMS is not set as your default messaging app. Do you want to set it default?")
@@ -72,15 +71,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
 
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                        }
+                        public void onClick(DialogInterface dialog, int which) { }
                     })
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @TargetApi(19)
-                        public void onClick(DialogInterface dialog, int id) {
-
+                        public void onClick(DialogInterface dialog, int id)
+                        {
                             Intent intent =
                                     new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
 
@@ -88,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     getPackageName());
 
                             startActivity(intent);
-
                         }
                     });
             builder.show();

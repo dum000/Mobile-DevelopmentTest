@@ -210,7 +210,7 @@ public class SMSUtil {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
+            
             if (!addresses.contains(thread_id)) {
                 threads.add(new ThreadInfo(thread_id, address, null, null, date));
                 addresses.add(thread_id);
