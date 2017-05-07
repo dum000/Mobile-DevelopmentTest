@@ -28,7 +28,7 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
         getListView().setAdapter(adapter);
         getListView().setOnItemClickListener(this);
     }
-
+    
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();

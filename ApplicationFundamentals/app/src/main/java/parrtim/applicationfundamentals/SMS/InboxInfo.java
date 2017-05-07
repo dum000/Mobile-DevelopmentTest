@@ -9,7 +9,7 @@ public class InboxInfo implements Serializable {
     public String Number;
     public String Message;
     public boolean Incoming;
-
+    
     public InboxInfo(String number, String message, Date date, boolean incoming)
     {
         this.Number = number;
