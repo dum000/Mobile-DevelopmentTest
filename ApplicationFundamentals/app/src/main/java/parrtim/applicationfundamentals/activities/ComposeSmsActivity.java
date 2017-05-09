@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.activities;
 
 import android.app.Activity;
 

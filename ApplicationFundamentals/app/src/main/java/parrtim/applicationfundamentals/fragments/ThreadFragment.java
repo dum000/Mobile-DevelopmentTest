@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
-import parrtim.applicationfundamentals.SMS.ConversationInfo;
-import parrtim.applicationfundamentals.SMS.SMSUtil;
+import parrtim.applicationfundamentals.R;
+import parrtim.applicationfundamentals.helper.SMSUtil;
+import parrtim.applicationfundamentals.adapters.ThreadListAdapter;
 
 public class ThreadFragment extends ListFragment implements AdapterView.OnItemClickListener {
 

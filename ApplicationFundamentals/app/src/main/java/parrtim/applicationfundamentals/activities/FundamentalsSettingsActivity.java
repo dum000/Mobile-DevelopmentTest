@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.activities;
 
 
 import android.annotation.TargetApi;
@@ -22,6 +22,8 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import parrtim.applicationfundamentals.R;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -33,7 +35,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class FundamentalsSettings extends AppCompatPreferenceActivity {
+public class FundamentalsSettingsActivity extends AppCompatPreferenceActivity {
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -185,7 +187,7 @@ public class FundamentalsSettings extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), FundamentalsSettings.class));
+                startActivity(new Intent(getActivity(), FundamentalsSettingsActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -215,7 +217,7 @@ public class FundamentalsSettings extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), FundamentalsSettings.class));
+                startActivity(new Intent(getActivity(), FundamentalsSettingsActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -245,7 +247,7 @@ public class FundamentalsSettings extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), FundamentalsSettings.class));
+                startActivity(new Intent(getActivity(), FundamentalsSettingsActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);

@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="parrtim.applicationfundamentals.SMS.SMSMessageParent"
+    tools:context="parrtim.applicationfundamentals.fragments.SMSMessageParentFragment"
     android:orientation="vertical">
     
     <fragment
         android:id="@+id/messages_fragment"
-        android:name="parrtim.applicationfundamentals.InboxFragment"
+        android:name="parrtim.applicationfundamentals.fragments.InboxFragment"
         tools:layout="@layout/fragment_inbox_list"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="0dp"
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/response_fragment"
-        android:name="parrtim.applicationfundamentals.SMS.SMSMessageFragment"
+        android:name="parrtim.applicationfundamentals.fragments.SMSMessageFragment"
         tools:layout="@layout/fragment_smsmessage"
         android:layout_width="0dp"
         app:layout_constraintLeft_toLeftOf="parent"

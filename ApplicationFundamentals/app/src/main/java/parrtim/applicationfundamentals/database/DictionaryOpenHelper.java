@@ -1,9 +1,12 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.Date;
 
 public class DictionaryOpenHelper extends SQLiteOpenHelper {
 
@@ -28,7 +31,7 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
     private static final String SEARCH_TABLE_CREATE =
             "CREATE TABLE " + SEARCH_TABLE_NAME + " (" +
                     SEARCH_QUERY_COLUMN + " TEXT, " +
-                    SEARCH_DATE_COLUMN + " DATE);";
+                    SEARCH_DATE_COLUMN + " DATETIME);";
 
     private SQLiteDatabase database;
 
@@ -61,7 +64,8 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
     }
 
     private boolean isTableExists(String tableName, boolean openDb) {
-        if(openDb) {
+        if(openDb)
+        {
             if(database == null || !database.isOpen()) {
                 database = getReadableDatabase();
             }
@@ -81,5 +85,13 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return false;
+    }
+
+    public void InsertSearch(String searchText)
+    {
+        ContentValues values = new ContentValues();
+        values.put(SEARCH_QUERY_COLUMN, searchText);
+        values.put(SEARCH_DATE_COLUMN, new Date().getTime());
+        database.insert(SEARCH_TABLE_NAME, null, values);
     }
 }

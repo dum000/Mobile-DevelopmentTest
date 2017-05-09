@@ -16,17 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/LightAppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
 
         <receiver
-            android:name=".SMS.SMSBroadcastReceiver"
+            android:name=".receivers.SMSBroadcastReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
@@ -34,7 +36,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".SMS.SentReciever"
+            android:name=".receivers.SentReciever"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
@@ -42,7 +44,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".MmsReceiver"
+            android:name=".receivers.MmsReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
@@ -52,13 +54,13 @@
         </receiver>
 
         <activity
-            android:name=".FundamentalsSettings"
+            android:name=".activities.FundamentalsSettingsActivity"
             android:label="@string/title_activity_fundamentals_settings" />
-        <activity android:name=".OtherSettingsActivity" />
+        <activity android:name=".activities.OtherSettingsActivity" />
 
         <!-- Service that delivers messages from the phone "quick response" -->
         <service
-            android:name=".HeadlessSmsSendService"
+            android:name=".services.HeadlessSmsSendService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
@@ -74,7 +76,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".SMS.SMSReply">
+        <activity android:name=".activities.SMSReplyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
@@ -90,8 +92,12 @@
         </activity>
 
         <service
-            android:name=".BackupService"
-            android:exported="false"></service>
+            android:name=".services.BackupService"
+            android:exported="false" />
+        <!--<provider-->
+            <!--android:authorities="parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider"-->
+            <!--android:name=".providers.RecentSearchSuggestionsProvider"-->
+            <!--android:exported="false">-->
+        <!--</provider>-->
     </application>
-
 </manifest>

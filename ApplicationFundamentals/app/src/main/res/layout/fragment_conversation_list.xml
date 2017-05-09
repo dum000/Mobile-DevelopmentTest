@@ -8,7 +8,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="parrtim.applicationfundamentals.ConversationFragment">
+    tools:context="parrtim.applicationfundamentals.fragments.ConversationFragment">
 
     <ListView
         android:id="@android:id/list"

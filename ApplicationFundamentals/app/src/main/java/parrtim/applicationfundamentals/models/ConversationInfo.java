@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals.SMS;
+package parrtim.applicationfundamentals.models;
 
 public class ConversationInfo  {
 

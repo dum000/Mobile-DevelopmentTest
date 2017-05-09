@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,9 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import parrtim.applicationfundamentals.SMS.ConversationInfo;
-import parrtim.applicationfundamentals.SMS.InboxInfo;
-import parrtim.applicationfundamentals.SMS.ThreadInfo;
+import parrtim.applicationfundamentals.R;
+import parrtim.applicationfundamentals.models.ThreadInfo;
 
 /**
  * Created by tparr on 4/11/2017.

@@ -1,9 +1,8 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.activities;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -27,8 +26,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import parrtim.applicationfundamentals.SMS.SMSBroadcastReceiver;
-import parrtim.applicationfundamentals.SMS.SMSUtil;
+import parrtim.applicationfundamentals.fragments.ConversationFragment;
+import parrtim.applicationfundamentals.fragments.InboxFragment;
+import parrtim.applicationfundamentals.fragments.ThreadFragment;
+import parrtim.applicationfundamentals.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -56,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_SMS) == PermissionChecker.PERMISSION_DENIED)
         {
             ActivityCompat.requestPermissions(this, new String[]{ android.Manifest.permission.READ_SMS }, 0);
+        }
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_DENIED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{ android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();

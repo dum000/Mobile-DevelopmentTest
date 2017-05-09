@@ -1,26 +1,21 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import parrtim.applicationfundamentals.SMS.InboxInfo;
-import parrtim.applicationfundamentals.SMS.SMSUtil;
+import parrtim.applicationfundamentals.models.InboxInfo;
+import parrtim.applicationfundamentals.helper.SMSUtil;
 
 public class BackupService extends IntentService {
 

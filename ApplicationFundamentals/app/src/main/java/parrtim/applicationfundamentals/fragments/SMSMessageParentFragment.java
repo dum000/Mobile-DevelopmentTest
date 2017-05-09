@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals.SMS;
+package parrtim.applicationfundamentals.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 
 import parrtim.applicationfundamentals.R;
 
-public class SMSMessageParent extends Fragment {
+public class SMSMessageParentFragment extends Fragment {
 
-    public SMSMessageParent() { }
+    public SMSMessageParentFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

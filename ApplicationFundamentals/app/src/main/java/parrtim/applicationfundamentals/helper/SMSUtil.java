@@ -1,31 +1,22 @@
-package parrtim.applicationfundamentals.SMS;
+package parrtim.applicationfundamentals.helper;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.net.Uri;
 import android.provider.Telephony;
 import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 
-import static android.database.Cursor.FIELD_TYPE_BLOB;
-import static android.database.Cursor.FIELD_TYPE_FLOAT;
-import static android.database.Cursor.FIELD_TYPE_INTEGER;
-import static android.database.Cursor.FIELD_TYPE_NULL;
-import static android.database.Cursor.FIELD_TYPE_STRING;
-import static java.security.AccessController.getContext;
+import parrtim.applicationfundamentals.models.ConversationInfo;
+import parrtim.applicationfundamentals.models.InboxInfo;
+import parrtim.applicationfundamentals.models.ThreadInfo;
 
 public class SMSUtil {
 

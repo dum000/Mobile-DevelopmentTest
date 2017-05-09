@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="parrtim.applicationfundamentals.SMS.SMSMessageFragment"
+    tools:context="parrtim.applicationfundamentals.fragments.SMSMessageFragment"
     android:layout_width="match_parent">
 
     <EditText

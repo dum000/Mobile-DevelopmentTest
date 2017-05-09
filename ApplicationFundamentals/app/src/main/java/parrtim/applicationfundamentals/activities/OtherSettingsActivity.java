@@ -1,13 +1,13 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.activities;
 
-import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
+
+import parrtim.applicationfundamentals.services.BackupService;
+import parrtim.applicationfundamentals.R;
 
 public class OtherSettingsActivity extends AppCompatActivity {
 

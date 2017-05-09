@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import parrtim.applicationfundamentals.SMS.InboxInfo;
+import parrtim.applicationfundamentals.R;
+import parrtim.applicationfundamentals.models.InboxInfo;
 
 public class ConversationListAdapter extends ArrayAdapter<InboxInfo> {
 

@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals.SMS;
+package parrtim.applicationfundamentals.fragments;
 
 
 import android.os.Bundle;

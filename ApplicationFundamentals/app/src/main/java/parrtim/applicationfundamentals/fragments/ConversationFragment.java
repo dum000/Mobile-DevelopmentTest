@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import parrtim.applicationfundamentals.SMS.SMSUtil;
+import parrtim.applicationfundamentals.adapters.ConversationListAdapter;
+import parrtim.applicationfundamentals.R;
+import parrtim.applicationfundamentals.helper.SMSUtil;
 
 /**
  * Created by tparr on 4/8/2017.

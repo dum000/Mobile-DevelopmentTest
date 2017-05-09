@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,7 +13,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import parrtim.applicationfundamentals.SMS.InboxInfo;
+import parrtim.applicationfundamentals.R;
+import parrtim.applicationfundamentals.models.InboxInfo;
 
 public class InboxListAdapter extends ArrayAdapter<InboxInfo> implements Filterable {
 
@@ -36,7 +37,7 @@ public class InboxListAdapter extends ArrayAdapter<InboxInfo> implements Filtera
 
         View rowView = inflater.inflate(R.layout.inbox_view, parent, false);
 
-        if (position >= smsList.size())
+        if (smsList == null || position >= smsList.size())
         {
             rowView.setVisibility(View.INVISIBLE);
             return rowView;
@@ -66,7 +67,8 @@ public class InboxListAdapter extends ArrayAdapter<InboxInfo> implements Filtera
                     ArrayList<InboxInfo> filteredResultsData = new ArrayList<>();
 
                     for (InboxInfo data : originalsmsList) {
-                        if (data.Number.contains(charSequence) || data.Message.contains(charSequence)) {
+                        if ((data.Number != null && data.Number.contains(charSequence))
+                                || (data.Message != null && data.Message.contains(charSequence))) {
                             filteredResultsData.add(data);
                         }
                     }

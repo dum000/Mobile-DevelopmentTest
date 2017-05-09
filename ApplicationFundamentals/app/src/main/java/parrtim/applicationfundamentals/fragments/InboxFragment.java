@@ -1,6 +1,7 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.fragments;
 
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -9,12 +10,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import parrtim.applicationfundamentals.SMS.SMSMessageParent;
-import parrtim.applicationfundamentals.SMS.SMSUtil;
+import java.util.Objects;
+
+import parrtim.applicationfundamentals.adapters.InboxListAdapter;
+import parrtim.applicationfundamentals.R;
+import parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider;
+import parrtim.applicationfundamentals.helper.SMSUtil;
 
 public class InboxFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     InboxListAdapter adapter;
+    SearchRecentSuggestions suggestions;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,6 +34,7 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
         super.onActivityCreated(savedInstanceState);
         getListView().setAdapter(adapter);
         getListView().setOnItemClickListener(this);
+        suggestions = new SearchRecentSuggestions(getContext(), RecentSearchSuggestionsProvider.AUTHORITY, RecentSearchSuggestionsProvider.MODE);
     }
     
     @Override
@@ -34,7 +42,7 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
         Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
 
         this.getFragmentManager().beginTransaction()
-                .replace(R.id.frame1, new SMSMessageParent(), null)
+                .replace(R.id.frame1, new SMSMessageParentFragment(), null)
                 .addToBackStack(null)
                 .commit();
     }
@@ -42,5 +50,8 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
     public void Filter(String filterText)
     {
         adapter.getFilter().filter(filterText);
+        if (!Objects.equals(filterText, "")) {
+            suggestions.saveRecentQuery(filterText, null);
+        }
     }
 }

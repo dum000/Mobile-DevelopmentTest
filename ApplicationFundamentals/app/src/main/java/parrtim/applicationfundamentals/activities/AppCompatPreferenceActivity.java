@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals;
+package parrtim.applicationfundamentals.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

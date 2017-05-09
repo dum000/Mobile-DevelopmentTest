@@ -1,4 +1,4 @@
-package parrtim.applicationfundamentals.SMS;
+package parrtim.applicationfundamentals.receivers;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,7 +11,7 @@ import android.provider.Telephony;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 
-import parrtim.applicationfundamentals.MainActivity;
+import parrtim.applicationfundamentals.activities.MainActivity;
 import parrtim.applicationfundamentals.R;
 
 public class SMSBroadcastReceiver extends BroadcastReceiver {
