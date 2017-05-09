@@ -94,10 +94,10 @@
         <service
             android:name=".services.BackupService"
             android:exported="false" />
-        <!--<provider-->
-            <!--android:authorities="parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider"-->
-            <!--android:name=".providers.RecentSearchSuggestionsProvider"-->
-            <!--android:exported="false">-->
-        <!--</provider>-->
+        <provider
+            android:authorities="parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider"
+            android:name=".providers.RecentSearchSuggestionsProvider"
+            android:exported="true">
+        </provider>
     </application>
 </manifest>

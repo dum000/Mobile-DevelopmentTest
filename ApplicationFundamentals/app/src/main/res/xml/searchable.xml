@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_name"
-    android:searchSuggestAuthority="parrtim.applicationfundamentals.SearchRecentSuggestionsProvider"
-    android:searchSuggestIntentAction="android.intent.action.VIEW"
-    android:searchSuggestSelection="word MATCH ?"
-    android:searchSuggestThreshold="3">
+    android:searchSuggestAuthority="parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider"
+    android:searchSuggestSelection=" ?"
+    android:includeInGlobalSearch="true"
+    android:searchSuggestIntentData="content://parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider/suggestions">
 </searchable>

@@ -3,8 +3,11 @@ package parrtim.applicationfundamentals.activities;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,11 +33,13 @@ import parrtim.applicationfundamentals.fragments.ConversationFragment;
 import parrtim.applicationfundamentals.fragments.InboxFragment;
 import parrtim.applicationfundamentals.fragments.ThreadFragment;
 import parrtim.applicationfundamentals.R;
+import parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     String msg = "Main Activity";
     SearchView searchView;
+    SearchRecentSuggestions suggestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +59,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        SearchRecentSuggestionsProvider searchRecentSuggestionsProvider = new SearchRecentSuggestionsProvider();
+        Log.d(msg, RecentSearchSuggestionsProvider.AUTHORITY);
+        suggestions = new SearchRecentSuggestions(this, RecentSearchSuggestionsProvider.AUTHORITY, RecentSearchSuggestionsProvider.MODE);
+
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_SMS) == PermissionChecker.PERMISSION_DENIED)
         {
             ActivityCompat.requestPermissions(this, new String[]{ android.Manifest.permission.READ_SMS }, 0);
         }
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_DENIED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{ android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame1, new ThreadFragment()).commit();
+        if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+            fragmentManager.beginTransaction().replace(R.id.frameLeft, new ThreadFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.frameRight, new ConversationFragment()).commit();
+        }
+        else
+        {
+            fragmentManager.beginTransaction().replace(R.id.frame1, new ThreadFragment()).commit();
+        }
 
         if (Telephony.Sms.getDefaultSmsPackage(this) == null || !Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
             // App is not default
@@ -180,6 +196,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new ConversationFragment();
         } else if (id == R.id.inbox) {
             fragment = new InboxFragment();
+            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                @Override
+                public boolean onSuggestionClick(int position) {
+                    return true;
+                }
+
+                @Override
+                public boolean onSuggestionSelect(int position) {
+                    return true;
+                }
+            });
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -189,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public boolean onQueryTextChange(String newText) {
                     ((InboxFragment)fragment).Filter(newText);
+                    suggestions.saveRecentQuery(newText, null);
                     return true;
                 }
             });

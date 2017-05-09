@@ -20,8 +20,6 @@ import parrtim.applicationfundamentals.helper.SMSUtil;
 public class InboxFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     InboxListAdapter adapter;
-    SearchRecentSuggestions suggestions;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +32,6 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
         super.onActivityCreated(savedInstanceState);
         getListView().setAdapter(adapter);
         getListView().setOnItemClickListener(this);
-        suggestions = new SearchRecentSuggestions(getContext(), RecentSearchSuggestionsProvider.AUTHORITY, RecentSearchSuggestionsProvider.MODE);
     }
     
     @Override
@@ -50,8 +47,5 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
     public void Filter(String filterText)
     {
         adapter.getFilter().filter(filterText);
-        if (!Objects.equals(filterText, "")) {
-            suggestions.saveRecentQuery(filterText, null);
-        }
     }
 }
