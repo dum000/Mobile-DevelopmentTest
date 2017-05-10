@@ -44,6 +44,10 @@ public class InboxFragment extends ListFragment implements AdapterView.OnItemCli
                 .commit();
     }
 
+    public void SetItem(int position) {
+        getListView().setSelection(position);
+    }
+
     public void Filter(String filterText)
     {
         adapter.getFilter().filter(filterText);

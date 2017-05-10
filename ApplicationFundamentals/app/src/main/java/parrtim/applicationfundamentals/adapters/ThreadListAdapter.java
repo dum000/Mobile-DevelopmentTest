@@ -1,10 +1,12 @@
 package parrtim.applicationfundamentals.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
@@ -53,5 +55,42 @@ public class ThreadListAdapter extends ArrayAdapter<ThreadInfo> implements Filte
         snippet.setText(smsList.get(position).Snippet);
 
         return rowView;
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults results = new FilterResults();
+
+                if (charSequence == null || charSequence.length() == 0) {
+                    results.values = originalsmsList;
+                    results.count = originalsmsList.size();
+                } else {
+                    ArrayList<ThreadInfo> filteredResultsData = new ArrayList<>();
+
+                    for (ThreadInfo data : originalsmsList) {
+                        if ((data.Sender != null && data.Sender.contains(charSequence))
+                                || (data.Snippet != null && data.Snippet.contains(charSequence))) {
+
+                            filteredResultsData.add(data);
+                        }
+                    }
+
+                    results.values = filteredResultsData;
+                    results.count = filteredResultsData.size();
+                }
+
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                smsList = (List<ThreadInfo>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

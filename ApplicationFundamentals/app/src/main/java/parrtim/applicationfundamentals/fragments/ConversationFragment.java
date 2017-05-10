@@ -14,10 +14,6 @@ import parrtim.applicationfundamentals.adapters.ConversationListAdapter;
 import parrtim.applicationfundamentals.R;
 import parrtim.applicationfundamentals.helper.SMSUtil;
 
-/**
- * Created by tparr on 4/8/2017.
- */
-
 public class ConversationFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     ConversationListAdapter adapter;

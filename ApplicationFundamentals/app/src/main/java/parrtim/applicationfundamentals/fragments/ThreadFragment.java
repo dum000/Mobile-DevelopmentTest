@@ -1,5 +1,6 @@
 package parrtim.applicationfundamentals.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -16,10 +17,12 @@ import parrtim.applicationfundamentals.adapters.ThreadListAdapter;
 public class ThreadFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     ThreadListAdapter adapter;
+    public String FirstNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         adapter = new ThreadListAdapter(getContext(), SMSUtil.getSMSThreads(getContext()));
+        FirstNumber = adapter.getItem(0).Sender;
         return inflater.inflate(R.layout.fragment_conversation_list, container, false);
     }
 
@@ -32,16 +35,30 @@ public class ThreadFragment extends ListFragment implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Bundle bundle = new Bundle();
-        bundle.putString("address", adapter.getItem(position).Sender);
+            Bundle bundle = new Bundle();
+            bundle.putString("address", adapter.getItem(position).Sender);
 
-        ConversationFragment fragment = new ConversationFragment();
-        fragment.setArguments(bundle);
+            ConversationFragment fragment = new ConversationFragment();
+            fragment.setArguments(bundle);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame1, fragment)
-                .addToBackStack(null)
-                .commit();
+            FragmentManager fragmentManager = getFragmentManager();
+        if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
+        {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frameRight, fragment)
+                    .commit();
+        }
+        else
+        {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame1, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
+    public void Filter(String searchText) {
+
+        adapter.getFilter().filter(searchText);
     }
 }

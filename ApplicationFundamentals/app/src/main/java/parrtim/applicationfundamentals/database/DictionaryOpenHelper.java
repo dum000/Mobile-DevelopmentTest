@@ -26,10 +26,12 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
 
     //SEARCH TABLE
     private static final String SEARCH_TABLE_NAME = "Search";
+    private static final String SEARCH_id_COLUMN = "_id";
     private static final String SEARCH_QUERY_COLUMN = "Query";
     private static final String SEARCH_DATE_COLUMN = "DATE";
     private static final String SEARCH_TABLE_CREATE =
             "CREATE TABLE " + SEARCH_TABLE_NAME + " (" +
+                    SEARCH_id_COLUMN + " integer primary key, " +
                     SEARCH_QUERY_COLUMN + " TEXT, " +
                     SEARCH_DATE_COLUMN + " DATETIME);";
 
@@ -52,8 +54,6 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DRAFT_TABLE_CREATE);
-        db.execSQL(SEARCH_TABLE_CREATE);
     }
 
     @Override
@@ -87,11 +87,28 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public void InsertSearch(String searchText)
-    {
+    public void InsertSearch(String searchText) {
         ContentValues values = new ContentValues();
         values.put(SEARCH_QUERY_COLUMN, searchText);
         values.put(SEARCH_DATE_COLUMN, new Date().getTime());
-        database.insert(SEARCH_TABLE_NAME, null, values);
+        int rowsUpdated = database.update(SEARCH_TABLE_NAME, values, SEARCH_QUERY_COLUMN + "=?", new String[]{searchText});
+        if (rowsUpdated <= 0) {
+            database.insert(SEARCH_TABLE_NAME, null, values);
+        }
+    }
+
+    public Cursor GetSearches(String searchText)
+    {
+        if (!database.isOpen()) {
+            database = getReadableDatabase();
+        }
+
+        Cursor cursor = database.rawQuery("SELECT * FROM " + SEARCH_TABLE_NAME + " WHERE " + SEARCH_QUERY_COLUMN + " LIKE '%" + searchText + "%' LIMIT 10", null);
+        if (cursor == null || cursor.getCount() <= 0) {
+            return database.rawQuery("SELECT * FROM " + SEARCH_TABLE_NAME + " ORDER BY " + SEARCH_id_COLUMN + " DESC LIMIT 10", null);
+        }
+        else {
+            return cursor;
+        }
     }
 }

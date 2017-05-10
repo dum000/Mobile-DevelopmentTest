@@ -3,6 +3,5 @@
     android:label="@string/app_name"
     android:searchSuggestAuthority="parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider"
     android:searchSuggestSelection=" ?"
-    android:includeInGlobalSearch="true"
     android:searchSuggestIntentData="content://parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider/suggestions">
 </searchable>
