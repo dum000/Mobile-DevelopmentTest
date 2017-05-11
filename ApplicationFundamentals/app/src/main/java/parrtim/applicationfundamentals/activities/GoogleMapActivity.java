@@ -35,7 +35,7 @@ public class GoogleMapActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
                 map.getUiSettings().setMyLocationButtonEnabled(false);
-                map.setMyLocationEnabled(true);
+//                map.setMyLocationEnabled(true);
                 map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
