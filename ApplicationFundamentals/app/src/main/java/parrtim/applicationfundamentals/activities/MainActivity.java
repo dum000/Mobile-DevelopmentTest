@@ -1,11 +1,10 @@
 package parrtim.applicationfundamentals.activities;
 
-import android.annotation.TargetApi;
+import android.Manifest;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -24,17 +23,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import parrtim.applicationfundamentals.R;
@@ -54,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Cursor suggestionCursor;
     Handler handler;
     Runnable runnable;
+    FragmentManager fragmentManager;
+    ArrayList<String> permissionsToRequest = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         suggestionCursor = database.GetSearches("");
         suggestions = new SuggestionAdapter(getApplicationContext(), suggestionCursor);
         handler = new Handler();
-
+        fragmentManager = getSupportFragmentManager();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -78,52 +77,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_SMS) == PermissionChecker.PERMISSION_DENIED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{ android.Manifest.permission.READ_SMS }, 0);
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_SMS) == PermissionChecker.PERMISSION_DENIED) {
+            permissionsToRequest.add(Manifest.permission.READ_SMS);
         }
-
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PermissionChecker.PERMISSION_DENIED) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
-        {
-            ConversationFragment conversationFragment = new ConversationFragment();
-            fragmentManager.beginTransaction().replace(R.id.frameRight, conversationFragment).commit();
-        }
-        else
-        {
-            fragmentManager.beginTransaction().replace(R.id.frame1, new ThreadFragment()).commit();
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PermissionChecker.PERMISSION_DENIED) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
 
+        String[] permissionsArray = new String[permissionsToRequest.size()];
+        permissionsArray = permissionsToRequest.toArray(permissionsArray);
+
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsArray, 0);
+        }
+        else {
+            CheckForDefaultApp();
+        }
+    }
+
+    private void CheckForDefaultApp() {
         if (Telephony.Sms.getDefaultSmsPackage(this) == null || !Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
-            // App is not default
+            Intent intent =
+                    new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.Theme_AppCompat_Light_NoActionBar));
-            builder.setMessage("TMS is not set as your default messaging app. Do you want to set it default?")
-                    .setCancelable(false)
-                    .setTitle("Alert!")
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+                    getPackageName());
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) { }
-                    })
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @TargetApi(19)
-                        public void onClick(DialogInterface dialog, int id)
-                        {
-                            Intent intent =
-                                    new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-
-                            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
-                                    getPackageName());
-
-                            startActivity(intent);
-                        }
-                    });
-            builder.show();
+            startActivity(intent);
         }
     }
 
@@ -174,8 +161,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ConversationFragment fragment = new ConversationFragment();
         fragment.setArguments(bundle);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
         if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
             fragmentManager.beginTransaction()
                     .replace(R.id.frameRight, fragment)
@@ -207,16 +192,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setSearchableInfo(searchableInfo);
         searchView.setSuggestionsAdapter(suggestions);
 
-        LoadFragment(R.id.threads);
+        if (permissionsToRequest.isEmpty())
+        {
+            LoadFragment(R.id.threads);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 0:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)
                 {
-
+                    CheckForDefaultApp();
+                    LoadFragment(R.id.threads);
                 }
         }
     }
@@ -242,14 +231,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
                     {
                         searchView.setQuery(suggestions.GetItem(position), false);
-                        getSupportFragmentManager().beginTransaction()
+                        fragmentManager.beginTransaction()
                                 .replace(R.id.frameRight, clickedFragment, null)
                                 .addToBackStack(null)
                                 .commit();
                     }
                     else {
                         searchView.setQuery(suggestions.GetItem(position), true);
-                        getSupportFragmentManager().beginTransaction()
+                        fragmentManager.beginTransaction()
                                 .replace(R.id.frame1, clickedFragment, null)
                                 .addToBackStack(null)
                                 .commit();
@@ -298,14 +287,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
                     {
                         searchView.setQuery(suggestions.GetItem(position), false);
-                        getSupportFragmentManager().beginTransaction()
+                        fragmentManager.beginTransaction()
                                 .replace(R.id.frameRight, fragment, null)
                                 .addToBackStack(null)
                                 .commit();
                     }
                     else {
                         searchView.setQuery(suggestions.GetItem(position), true);
-                        getSupportFragmentManager().beginTransaction()
+                        fragmentManager.beginTransaction()
                                 .replace(R.id.frame1, fragment, null)
                                 .addToBackStack(null)
                                 .commit();
@@ -347,11 +336,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+        if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
+        {
             fragmentManager.beginTransaction()
                     .replace(R.id.frameLeft, fragment)
                     .commit();
+
+            ConversationFragment conversationFragment = new ConversationFragment();
+            fragmentManager.beginTransaction().replace(R.id.frameRight, conversationFragment).commit();
         }
         else
         {
@@ -367,8 +359,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
         }

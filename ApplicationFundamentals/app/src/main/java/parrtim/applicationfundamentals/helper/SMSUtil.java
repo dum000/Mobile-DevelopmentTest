@@ -51,7 +51,7 @@ public class SMSUtil {
 
     public static ArrayList<InboxInfo> getSMSConversations(Context context, String sender)
     {
-        boolean noSender = sender == "" || sender == null;
+        boolean noSender = Objects.equals(sender, "") || sender == null;
 
         ArrayList<InboxInfo> messages = new ArrayList<>();
         Cursor inboxCursor = context.getContentResolver().query(
@@ -85,9 +85,9 @@ public class SMSUtil {
 
         Cursor sentCursor = context.getContentResolver().query(
                 Telephony.Sms.Sent.CONTENT_URI,
-                new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
-                noSender ? null : Telephony.Sms.Inbox.ADDRESS + " = ?",
-                noSender ? null : new String[] { sender },
+                new String[] { Telephony.Sms.Sent.ADDRESS, Telephony.Sms.Sent.BODY, Telephony.Sms.Sent.DATE },
+                Telephony.Sms.Sent.ADDRESS + " = ?",
+                new String[] { "9514155912" },
                 "DATE DESC");
 
         if (sentCursor != null) {

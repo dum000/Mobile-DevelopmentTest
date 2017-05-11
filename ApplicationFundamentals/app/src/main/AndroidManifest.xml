@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +17,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/LightAppTheme">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAiyxzycTlggOfvgTGkT91C5UlCWgUQgzU"/>
+
         <activity
-            android:name=".activities.MainActivity"
-            android:launchMode="singleInstance">
+            android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -92,9 +97,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.GoogleMapActivity">
+        </activity>
+
         <service
             android:name=".services.BackupService"
             android:exported="false" />
+
         <provider
             android:authorities="parrtim.applicationfundamentals.providers.RecentSearchSuggestionsProvider"
             android:name=".providers.RecentSearchSuggestionsProvider"

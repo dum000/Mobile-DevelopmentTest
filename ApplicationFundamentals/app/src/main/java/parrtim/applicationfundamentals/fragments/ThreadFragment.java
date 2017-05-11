@@ -23,7 +23,7 @@ public class ThreadFragment extends ListFragment implements AdapterView.OnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         adapter = new ThreadListAdapter(getContext(), SMSUtil.getSMSThreads(getContext()));
         FirstNumber = adapter.getItem(0).Sender;
-        return inflater.inflate(R.layout.fragment_conversation_list, container, false);
+        return inflater.inflate(R.layout.fragment_thread_list, container, false);
     }
 
     @Override
@@ -61,4 +61,6 @@ public class ThreadFragment extends ListFragment implements AdapterView.OnItemCl
 
         adapter.getFilter().filter(searchText);
     }
+
+
 }
