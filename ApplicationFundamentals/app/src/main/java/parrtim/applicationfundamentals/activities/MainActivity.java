@@ -32,11 +32,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 import parrtim.applicationfundamentals.R;
 import parrtim.applicationfundamentals.adapters.SuggestionAdapter;
-import parrtim.applicationfundamentals.database.DictionaryOpenHelper;
+import parrtim.applicationfundamentals.database.DatabaseOpenHelper;
 import parrtim.applicationfundamentals.fragments.ConversationFragment;
 import parrtim.applicationfundamentals.fragments.InboxFragment;
 import parrtim.applicationfundamentals.fragments.SMSMessageParentFragment;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 {
     String msg = "Main Activity";
     SearchView searchView;
-    DictionaryOpenHelper database;
+    DatabaseOpenHelper database;
     SuggestionAdapter suggestions;
     Cursor suggestionCursor;
     Handler handler;
@@ -58,9 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(msg, "OnCreate event");
-        //retrieveSharePreferences();
         setContentView(R.layout.activity_main);
-        database = new DictionaryOpenHelper(getApplicationContext());
+        database = new DatabaseOpenHelper(getApplicationContext());
         suggestionCursor = database.GetSearches("");
         suggestions = new SuggestionAdapter(getApplicationContext(), suggestionCursor);
         handler = new Handler();
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_SMS) == PermissionChecker.PERMISSION_DENIED) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_SMS) == PermissionChecker.PERMISSION_DENIED) {
             permissionsToRequest.add(Manifest.permission.READ_SMS);
         }
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_DENIED) {
@@ -112,31 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             startActivity(intent);
         }
-    }
-
-    protected void retrieveSharePreferences()
-    {
-//        SharedPreferences preferences = getSharedPreferences("Settings", 0);
-//        String theme = preferences.getString("Theme", null);
-//
-//        if (theme == null)
-//        {
-//            SharedPreferences.Editor edit = preferences.edit();
-//            edit.putString("Theme", "DarkAppTheme");
-//            setTheme(R.style.DarkAppTheme);
-//        }
-//        else if (theme.equals("DarkAppTheme"))
-//        {
-//            setTheme(R.style.DarkAppTheme);
-//        }
-//        else if (theme.equals("LightAppTheme"))
-//        {
-//            setTheme(R.style.LightAppTheme);
-//        }
-//        else
-//        {
-//            Log.d(msg,"Theme was unexpected value: " + theme);
-//        }
     }
 
     @Override
@@ -192,27 +167,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setSearchableInfo(searchableInfo);
         searchView.setSuggestionsAdapter(suggestions);
 
-        if (permissionsToRequest.isEmpty())
-        {
-            LoadFragment(R.id.threads);
-        }
+        LoadFragment(R.id.threads);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 0:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults.length == 0 || grantResults.length > 0 && !Arrays.asList(grantResults).contains(PackageManager.PERMISSION_DENIED))
                 {
                     CheckForDefaultApp();
-                    LoadFragment(R.id.threads);
                 }
         }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
         return LoadFragment(id);
     }
@@ -220,121 +190,126 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean LoadFragment(int id) {
         final Fragment fragment;
 
-        if (id == R.id.conversations) {
-            fragment = new ConversationFragment();
-        } else if (id == R.id.inbox) {
-            fragment = new InboxFragment();
-            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                final Fragment clickedFragment = new SMSMessageParentFragment();
-                @Override
-                public boolean onSuggestionClick(int position) {
-                    if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
-                    {
-                        searchView.setQuery(suggestions.GetItem(position), false);
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frameRight, clickedFragment, null)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                    else {
-                        searchView.setQuery(suggestions.GetItem(position), true);
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frame1, clickedFragment, null)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                    return true;
-                }
+        switch (id) {
+            case R.id.conversations:
+                fragment = new ConversationFragment();
+                break;
+            case R.id.inbox:
+                fragment = new InboxFragment();
+                searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                    final Fragment clickedFragment = new SMSMessageParentFragment();
 
-                @Override
-                public boolean onSuggestionSelect(int position) {
-                    return true;
-                }
-            });
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(final String searchText) {
-                    ((InboxFragment)fragment).Filter(searchText);
-                    if (!Objects.equals(searchText, "")) {
-                        if (runnable != null)
-                            handler.removeCallbacks(runnable);
-
-                        runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                database.InsertSearch(searchText);
-                                suggestionCursor = database.GetSearches(searchText);
-                                suggestions.changeCursor(suggestionCursor);
-                                suggestions.notifyDataSetChanged();
-                            }
-                        };
-                        handler.postDelayed(runnable, 500);
+                    @Override
+                    public boolean onSuggestionClick(int position) {
+                        if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+                            searchView.setQuery(suggestions.GetItem(position), false);
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.frameRight, clickedFragment, null)
+                                    .addToBackStack(null)
+                                    .commit();
+                        } else {
+                            searchView.setQuery(suggestions.GetItem(position), true);
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.frame1, clickedFragment, null)
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            });
-        } // THREAD FRAGMENT
-        else {
-            fragment = new ThreadFragment();
-            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                @Override
-                public boolean onSuggestionClick(int position) {
-                    if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
-                    {
-                        searchView.setQuery(suggestions.GetItem(position), false);
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frameRight, fragment, null)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                    else {
-                        searchView.setQuery(suggestions.GetItem(position), true);
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frame1, fragment, null)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                    return true;
-                }
 
-                @Override
-                public boolean onSuggestionSelect(int position) {
-                    return true;
-                }
-            });
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(final String searchText) {
-                    ((ThreadFragment)fragment).Filter(searchText);
-                    if (!Objects.equals(searchText, "")) {
-                        if (runnable != null)
-                            handler.removeCallbacks(runnable);
-
-                        runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                database.InsertSearch(searchText);
-                                suggestionCursor = database.GetSearches(searchText);
-                                suggestions.changeCursor(suggestionCursor);
-                                suggestions.notifyDataSetChanged();
-                            }
-                        };
-                        handler.postDelayed(runnable, 500);
+                    @Override
+                    public boolean onSuggestionSelect(int position) {
+                        return true;
                     }
-                    return true;
-                }
-            });
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(final String searchText) {
+                        ((InboxFragment) fragment).Filter(searchText);
+                        if (!Objects.equals(searchText, "")) {
+                            if (runnable != null)
+                                handler.removeCallbacks(runnable);
+
+                            runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    database.InsertSearch(searchText);
+                                    suggestionCursor = database.GetSearches(searchText);
+                                    suggestions.changeCursor(suggestionCursor);
+                                    suggestions.notifyDataSetChanged();
+                                }
+                            };
+                            handler.postDelayed(runnable, 500);
+                        }
+                        return true;
+                    }
+                });
+                break;
+            case R.id.threads:
+                fragment = new ThreadFragment();
+
+                searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                    @Override
+                    public boolean onSuggestionClick(int position) {
+                        if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE)) {
+                            searchView.setQuery(suggestions.GetItem(position), false);
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.frameRight, fragment, null)
+                                    .addToBackStack(null)
+                                    .commit();
+                        } else {
+                            searchView.setQuery(suggestions.GetItem(position), true);
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.frame1, fragment, null)
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onSuggestionSelect(int position) {
+                        return true;
+                    }
+                });
+
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(final String searchText) {
+                        ((ThreadFragment) fragment).Filter(searchText);
+                        if (!Objects.equals(searchText, "")) {
+                            if (runnable != null)
+                                handler.removeCallbacks(runnable);
+
+                            runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    database.InsertSearch(searchText);
+                                    suggestionCursor = database.GetSearches(searchText);
+                                    suggestions.changeCursor(suggestionCursor);
+                                    suggestions.notifyDataSetChanged();
+                                }
+                            };
+                            handler.postDelayed(runnable, 500);
+                        }
+                        return true;
+                    }
+                });
+                break;
+            default:
+                throw new UnsupportedOperationException(Integer.toString(id));
         }
+
 
         if (getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE))
         {

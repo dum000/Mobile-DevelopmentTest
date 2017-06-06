@@ -7,8 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.Date;
+import java.util.Objects;
 
-public class DictionaryOpenHelper extends SQLiteOpenHelper {
+public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "ApplicationFundamentals";
@@ -37,7 +38,7 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase database;
 
-    public DictionaryOpenHelper(Context context) {
+    public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         try {
             database = context.openOrCreateDatabase(DATABASE_NAME, 0, null);
@@ -102,6 +103,9 @@ public class DictionaryOpenHelper extends SQLiteOpenHelper {
         if (!database.isOpen()) {
             database = getReadableDatabase();
         }
+
+        if (searchText == null || Objects.equals(searchText, ""))
+            return database.rawQuery("SELECT * FROM " + SEARCH_TABLE_NAME + " ORDER BY " + SEARCH_id_COLUMN + " DESC LIMIT 10", null);
 
         Cursor cursor = database.rawQuery("SELECT * FROM " + SEARCH_TABLE_NAME + " WHERE " + SEARCH_QUERY_COLUMN + " LIKE '%" + searchText + "%' LIMIT 10", null);
         if (cursor == null || cursor.getCount() <= 0) {

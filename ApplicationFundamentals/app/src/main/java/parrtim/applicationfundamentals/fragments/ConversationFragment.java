@@ -39,7 +39,7 @@ public class ConversationFragment extends ListFragment {
     ConversationListAdapter adapter;
     String address;
     EditText input;
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();

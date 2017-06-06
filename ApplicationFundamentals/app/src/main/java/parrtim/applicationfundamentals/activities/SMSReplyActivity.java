@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import parrtim.applicationfundamentals.database.DictionaryOpenHelper;
+import parrtim.applicationfundamentals.database.DatabaseOpenHelper;
 import parrtim.applicationfundamentals.R;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
@@ -29,7 +29,7 @@ public class SMSReplyActivity extends Activity {
     String receivedMessage;
     String receivedNumber;
     String msg = "ReplyActivity";
-    DictionaryOpenHelper database;
+    DatabaseOpenHelper database;
     String mCurrentPhotoPath;
 
     @Override
@@ -47,7 +47,7 @@ public class SMSReplyActivity extends Activity {
         TextView numberViewById = (TextView) findViewById(R.id.inboxNumber);
         numberViewById.setText(receivedNumber);
 
-        database = new DictionaryOpenHelper(getApplicationContext());
+        database = new DatabaseOpenHelper(getApplicationContext());
 
         SQLiteDatabase readableDatabase = database.getReadableDatabase();
 

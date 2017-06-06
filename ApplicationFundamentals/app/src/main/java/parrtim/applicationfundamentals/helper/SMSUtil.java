@@ -3,6 +3,7 @@ package parrtim.applicationfundamentals.helper;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.Telephony;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -18,15 +19,17 @@ import parrtim.applicationfundamentals.models.ConversationInfo;
 import parrtim.applicationfundamentals.models.InboxInfo;
 import parrtim.applicationfundamentals.models.ThreadInfo;
 
+import static android.content.Context.TELEPHONY_SERVICE;
+
 public class SMSUtil {
 
-    static SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");;
+    private static SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");;
 
     public static ArrayList<InboxInfo> getSMSInbox(Context context) {
         ArrayList<InboxInfo> messages = new ArrayList<>();
         Cursor cur = context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, null, null, null, null);
 
-        String[] columnNames = cur.getColumnNames();
+        if (cur == null) return messages;
 
         int addressIndex = cur.getColumnIndex("address");
         int bodyIndex = cur.getColumnIndex("body");
@@ -56,7 +59,7 @@ public class SMSUtil {
         ArrayList<InboxInfo> messages = new ArrayList<>();
         Cursor inboxCursor = context.getContentResolver().query(
                 Telephony.Sms.Inbox.CONTENT_URI,
-                new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE },
+                new String[] { Telephony.Sms.Inbox.ADDRESS, Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE, },
                 noSender ? null : Telephony.Sms.Inbox.ADDRESS + " = ?",
                 noSender ? null : new String[] { sender },
                 "DATE DESC");
@@ -83,11 +86,15 @@ public class SMSUtil {
             inboxCursor.close();
         }
 
+        TelephonyManager systemService = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
+        String line1Number = systemService.getLine1Number();
+        boolean validNumber = line1Number != null && !Objects.equals(line1Number, "");
+
         Cursor sentCursor = context.getContentResolver().query(
                 Telephony.Sms.Sent.CONTENT_URI,
-                new String[] { Telephony.Sms.Sent.ADDRESS, Telephony.Sms.Sent.BODY, Telephony.Sms.Sent.DATE },
-                Telephony.Sms.Sent.ADDRESS + " = ?",
-                new String[] { "9514155912" },
+                new String[] { Telephony.Sms.Sent.ADDRESS, Telephony.Sms.Sent.BODY, Telephony.Sms.Sent.DATE, },
+                validNumber ? Telephony.Sms.Sent.ADDRESS + " = ?" : null,
+                validNumber ? new String[] { line1Number }: null,
                 "DATE DESC");
 
         if (sentCursor != null) {
@@ -130,6 +137,8 @@ public class SMSUtil {
         ArrayList<InboxInfo> messages = new ArrayList<>();
         Cursor cur = context.getContentResolver().query(Telephony.Sms.Sent.CONTENT_URI, null, null, null, null);
 
+        if (cur == null) return messages;
+
         int addressIndex = cur.getColumnIndex("address");
         int bodyIndex = cur.getColumnIndex("body");
         int dateIndex = cur.getColumnIndex("date");
@@ -148,23 +157,6 @@ public class SMSUtil {
 
         cur.close();
         return messages;
-    }
-
-    @SuppressWarnings("Since15")
-    public static ArrayList<InboxInfo> getConversation(Context context) {
-        ArrayList<InboxInfo> incomingMessages = getSMSInbox(context);
-        ArrayList<InboxInfo> outgoingMessages = getSMSSent(context);
-
-        incomingMessages.addAll(outgoingMessages);
-
-        Collections.sort(incomingMessages, new Comparator<InboxInfo>() {
-            @Override
-            public int compare(InboxInfo inboxInfo, InboxInfo t1) {
-                return inboxInfo.Date.compareTo(t1.Date);
-            }
-        });
-
-        return incomingMessages;
     }
 
     public static ArrayList<ThreadInfo> getSMSThreads(Context context)
