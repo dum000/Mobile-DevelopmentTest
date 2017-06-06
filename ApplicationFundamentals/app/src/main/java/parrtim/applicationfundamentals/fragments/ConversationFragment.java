@@ -39,7 +39,7 @@ public class ConversationFragment extends ListFragment {
     ConversationListAdapter adapter;
     String address;
     EditText input;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
@@ -73,7 +73,8 @@ public class ConversationFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState)
+    {
         super.onActivityCreated(savedInstanceState);
         getListView().setAdapter(adapter);
         getListView().setSelection(adapter.getCount() - 1);

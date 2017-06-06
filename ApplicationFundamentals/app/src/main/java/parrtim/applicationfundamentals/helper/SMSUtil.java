@@ -93,8 +93,8 @@ public class SMSUtil {
         Cursor sentCursor = context.getContentResolver().query(
                 Telephony.Sms.Sent.CONTENT_URI,
                 new String[] { Telephony.Sms.Sent.ADDRESS, Telephony.Sms.Sent.BODY, Telephony.Sms.Sent.DATE, },
-                validNumber ? Telephony.Sms.Sent.ADDRESS + " = ?" : null,
-                validNumber ? new String[] { line1Number }: null,
+                !validNumber ? Telephony.Sms.Sent.ADDRESS + " = ?" : null,
+                !validNumber ? new String[] { line1Number }: null,
                 "DATE DESC");
 
         if (sentCursor != null) {
