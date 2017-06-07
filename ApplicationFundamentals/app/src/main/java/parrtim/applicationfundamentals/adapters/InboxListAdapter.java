@@ -36,7 +36,7 @@ public class InboxListAdapter extends ArrayAdapter<InboxInfo> implements Filtera
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         private TextView numberTextView;
         private TextView messageTextView;
     }

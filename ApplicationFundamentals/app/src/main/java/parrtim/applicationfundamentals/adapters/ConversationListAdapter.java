@@ -29,8 +29,14 @@ public class ConversationListAdapter extends ArrayAdapter<InboxInfo> {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         private TextView messageTextView;
+    }
+
+    @Override
+    public int getViewTypeCount()
+    {
+        return 2;
     }
 
     @NonNull

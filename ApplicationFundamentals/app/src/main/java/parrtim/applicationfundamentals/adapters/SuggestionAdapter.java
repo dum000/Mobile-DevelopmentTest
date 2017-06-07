@@ -3,6 +3,7 @@ package parrtim.applicationfundamentals.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +14,15 @@ import parrtim.applicationfundamentals.R;
 
 public class SuggestionAdapter extends CursorAdapter {
 
+    private LayoutInflater inflater;
     public SuggestionAdapter(Context context, Cursor c) {
         super(context, c, 0);
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.suggestion_item, parent, false);
+        return inflater.inflate(R.layout.suggestion_item, parent, false);
     }
 
     @Override
