@@ -17,33 +17,75 @@ public class ConversationListAdapter extends ArrayAdapter<InboxInfo> {
 
     private final Context context;
     private final List<InboxInfo> smsList;
+    private LayoutInflater inflater;
+    private final int Conversation_Left  = 0;
+    private final int Conversation_Right = 1;
 
     public ConversationListAdapter(Context context, List<InboxInfo> smsList)
     {
         super(context, R.layout.activity_main, smsList);
         this.context = context;
         this.smsList = smsList;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    static class ViewHolder {
+        private TextView messageTextView;
     }
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent)
+    {
+        int viewType = this.getItemViewType(position);
+        ViewHolder holder = null;
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView;
+        switch (viewType)
+        {
+            case Conversation_Left:
+                if (convertView == null)
+                {
+                    convertView = inflater.inflate(R.layout.conversation_left, parent, false);
 
+                    holder = new ViewHolder();
+                    holder.messageTextView = (TextView) convertView.findViewById(R.id.message);
+                    convertView.setTag(holder);
+                }
+                else
+                {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+                break;
+            case Conversation_Right:
+                if (convertView == null)
+                {
+                    convertView = inflater.inflate(R.layout.conversation_right, parent, false);
+
+                    holder = new ViewHolder();
+                    holder.messageTextView = (TextView) convertView.findViewById(R.id.message);
+                    convertView.setTag(holder);
+                }
+                else
+                {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+                break;
+                default:
+                    throw new IllegalStateException("Unrecognized ViewType: " + viewType);
+
+        }
+
+        holder.messageTextView.setText(smsList.get(position).Message);
+
+        return convertView;
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
         if (smsList.get(position).Incoming)
-        {
-            rowView = inflater.inflate(R.layout.conversation_left, parent, false);
-        }
+            return Conversation_Left;
         else
-        {
-            rowView = inflater.inflate(R.layout.conversation_right, parent, false);
-        }
-
-        TextView message = (TextView) rowView.findViewById(R.id.message);
-        message.setText(smsList.get(position).Message);
-
-        return rowView;
+            return Conversation_Right;
     }
 }

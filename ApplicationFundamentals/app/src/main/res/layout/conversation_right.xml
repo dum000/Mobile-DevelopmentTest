@@ -6,28 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2" />
-
     <TextView
         android:id="@+id/message"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAlignment="textEnd"
+        android:layout_marginRight="8dp"
         android:background="@drawable/chatbubbleright"
-        tools:layout_constraintRight_creator="1"
+        android:maxWidth="50dp"
+        android:text="This is a text"
+        android:textAlignment="center"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBaseline_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_editor_absoluteY="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline5"
-        app:layout_constraintHorizontal_bias="1.0"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"/>
+        tools:layout_editor_absoluteY="0dp"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -44,7 +44,7 @@ public class InboxListAdapter extends ArrayAdapter<InboxInfo> implements Filtera
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        
+
         ViewHolder holder;
 
         if (convertView == null)
